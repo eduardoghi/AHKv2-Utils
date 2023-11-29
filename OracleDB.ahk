@@ -7,17 +7,17 @@ Server := "DEDICATED"
 ; Some examples
 
 ; UpdateExample() {
-;     connection := OpenDBConnection("192.168.0.100", "1521", "MAIN", "admin", "admin")
-;     ExecuteQuery(connection, "UPDATE table SET column = 1 WHERE day = 1")
-;     connection.Close()
+;     Connection := OpenDBConnection("192.168.0.100", "1521", "MAIN", "admin", "admin")
+;     ExecuteQuery(Connection, "UPDATE table SET column = 1 WHERE day = 1")
+;     Connection.Close()
 ; }
 
 ; SelectExample() {
-;     connection := OpenDBConnection("192.168.0.100", "1521", "MAIN", "admin", "admin")
-;     Recordset := ExecuteQuery(connection, "SELECT 1 FROM DUAL")
-;     MsgBox Recordset.Fields(0).Value
+;     Connection := OpenDBConnection("192.168.0.100", "1521", "MAIN", "admin", "admin")
+;     Recordset := ExecuteQuery(Connection, "SELECT 1 FROM DUAL")
+;     MsgBox Recordset.Fields.Item(0).Value
 ;     Recordset.Close()
-;     connection.Close()
+;     Connection.Close()
 ; }
 
 OpenDBConnection(Host, Port, ServiceName, User, Password) {

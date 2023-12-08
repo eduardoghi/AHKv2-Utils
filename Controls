@@ -1,0 +1,4 @@
+RemoveTab(hwnd, Item) {
+    TCM_deleteITEM := 0x1308
+    SendMessage TCM_DELETEITEM, Item -1, 0, , "ahk_id " hwnd
+}

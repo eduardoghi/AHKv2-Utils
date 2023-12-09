@@ -1,3 +1,17 @@
+AddTab(TabText, ControlHwnd, Pos := GetTabCount(ControlHwnd) + 1) {
+    TCIF_TEXT := 0x0001
+    OffTxP := (3 * 4) + (A_PtrSize - 4)
+    TCM_INSERTITEMW := 0x133E
+
+    Size := (5 * 4) + (2 * A_PtrSize) + (A_PtrSize - 4)
+    TCITEM := Buffer(Size, 0)
+
+    NumPut("UInt", TCIF_TEXT, TCITEM, 0)
+    NumPut("Ptr", StrPtr(TabText), TCITEM, OffTxP)
+
+    SendMessage(TCM_INSERTITEMW, Pos - 1, TCITEM, , "ahk_id " ControlHwnd)
+}
+
 RemoveTab(hwnd, Item) {
     TCM_deleteITEM := 0x1308
     SendMessage TCM_DELETEITEM, Item -1, 0, , "ahk_id " hwnd

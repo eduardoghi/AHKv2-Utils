@@ -13,7 +13,7 @@ AddTab(TabText, ControlHwnd, Pos := GetTabCount(ControlHwnd) + 1) {
 }
 
 RemoveTab(hwnd, Item) {
-    TCM_deleteITEM := 0x1308
+    TCM_DELETEITEM := 0x1308
     SendMessage TCM_DELETEITEM, Item -1, 0, , "ahk_id " hwnd
 }
 
@@ -25,4 +25,12 @@ GetTabCount(hwnd) {
 GetSelTabIndex(hwnd) {
     TCM_GETCURSEL := 0x130B
     return SendMessage(TCM_GETCURSEL, 0, 0, , "ahk_id " hwnd) + 1
+}
+
+SetTabSelection(ControlHwnd, index := 0) {
+    TCM_SETCURFOCUS := 0x1330
+    TCM_SETCURSEL := 0x130C
+
+    SendMessage(TCM_SETCURFOCUS, index, 0, , ControlHwnd)
+    SendMessage(TCM_SETCURSEL, index, 0, , ControlHwnd)
 }

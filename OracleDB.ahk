@@ -1,4 +1,4 @@
-﻿#Requires AutoHotkey v2.0
+#Requires AutoHotkey v2.0
 
 Provider := "OraOLEDB.Oracle.1"
 Protocol := "TCP"
@@ -13,11 +13,16 @@ Server := "DEDICATED"
 ; }
 
 ; SelectExample() {
-;     Connection := OpenDBConnection("192.168.0.100", "1521", "MAIN", "admin", "admin")
-;     Recordset := ExecuteQuery(Connection, "SELECT 1 FROM DUAL")
-;     MsgBox Recordset.Fields.Item(0).Value
-;     Recordset.Close()
-;     Connection.Close()
+    ; Connection := OpenDBConnection("192.168.0.100", "1521", "MAIN", "admin", "admin")
+    ; Recordset := ExecuteQuery(Connection, "SELECT * FROM table")
+    ; if IsObject(Recordset) {
+    ;     if (Recordset.EOF = false) {
+    ;         MsgBox Recordset.Fields.Item(0).Value
+    ;     }
+
+    ;     Recordset.Close()
+    ; }
+    ; Connection.Close()
 ; }
 
 OpenDBConnection(Host, Port, ServiceName, User, Password) {
@@ -34,15 +39,19 @@ OpenDBConnection(Host, Port, ServiceName, User, Password) {
 
 ExecuteQuery(Connection, SqlQuery) {
     try {
-        if (SubStr(SqlQuery, 1, 6) == "SELECT") {
-            Recordset := ComObject("ADODB.Recordset")
-            Recordset.Open(SqlQuery, Connection)
+        Command := ComObject("ADODB.Command")
+        Command.ActiveConnection := Connection
+        Command.CommandText := SqlQuery
+
+        Recordset := Command.Execute()
+
+        if IsObject(Recordset) and Recordset.State = 1 {
             return Recordset
         } else {
-            Connection.Execute(SqlQuery)
+            return true
         }
     } catch as e {
         MsgBox "Error executing the SQL query: " e.Message
-        ExitApp
+        return
     }
 }

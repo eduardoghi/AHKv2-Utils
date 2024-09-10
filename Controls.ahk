@@ -12,30 +12,30 @@ AddTab(TabText, ControlHwnd, Pos := GetTabCount(ControlHwnd) + 1) {
     SendMessage(TCM_INSERTITEMW, Pos - 1, TCITEM, , "ahk_id " ControlHwnd)
 }
 
-RemoveTab(hwnd, Item) {
+RemoveTab(ControlHwnd, Item) {
     TCM_DELETEITEM := 0x1308
-    SendMessage(TCM_DELETEITEM, Item -1, 0, , "ahk_id " hwnd)
+    SendMessage(TCM_DELETEITEM, Item -1, 0, , "ahk_id " ControlHwnd)
 }
 
-GetTabCount(hwnd) {
+GetTabCount(ControlHwnd) {
     TCM_GETITEMCOUNT := 0x1304 
-    return SendMessage(TCM_GETITEMCOUNT, 0, 0, , "ahk_id " hwnd)
+    return SendMessage(TCM_GETITEMCOUNT, 0, 0, , "ahk_id " ControlHwnd)
 }
 
-GetSelTabIndex(hwnd) {
+GetSelTabIndex(ControlHwnd) {
     TCM_GETCURSEL := 0x130B
-    return SendMessage(TCM_GETCURSEL, 0, 0, , "ahk_id " hwnd) + 1
+    return SendMessage(TCM_GETCURSEL, 0, 0, , "ahk_id " ControlHwnd) + 1
 }
 
-SetTabSelection(ControlHwnd, index := 0) {
+SetTabSelection(ControlHwnd, Index := 0) {
     TCM_SETCURFOCUS := 0x1330
     TCM_SETCURSEL := 0x130C
 
-    SendMessage(TCM_SETCURFOCUS, index, 0, , ControlHwnd)
-    SendMessage(TCM_SETCURSEL, index, 0, , ControlHwnd)
+    SendMessage(TCM_SETCURFOCUS, Index, 0, , ControlHwnd)
+    SendMessage(TCM_SETCURSEL, Index, 0, , ControlHwnd)
 }
 
-GetTabCaption(ControlHwnd, index) {
+GetTabCaption(ControlHwnd, Index) {
     static TCM_GETITEM := 0x133C
         , TCIF_TEXT := 1
         , MAX_TEXT_LENGTH := 260
@@ -77,7 +77,7 @@ GetTabCaption(ControlHwnd, index) {
 
     DllCall("WriteProcessMemory", "ptr", hproc, "ptr", remote_item, "ptr", local_item, "uptr", TCITEM_SIZE, "ptr", 0)
 
-    SendMessage(TCM_GETITEM, index, remote_item,, "ahk_id " ControlHwnd)
+    SendMessage(TCM_GETITEM, Index, remote_item,, "ahk_id " ControlHwnd)
 
     DllCall("ReadProcessMemory", "ptr", hproc, "ptr", remote_text, "ptr", StrPtr(local_text), "uptr", MAX_TEXT_SIZE, "ptr", 0)
     VarSetStrCapacity(&local_text, -1)

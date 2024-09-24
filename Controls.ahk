@@ -94,8 +94,7 @@ GetListViewCheckboxState(ControlHwnd, RowIndex) {
 
     ItemState := SendMessage(LVM_GETITEMSTATE, RowIndex, LVIS_STATEIMAGEMASK, , "ahk_id " ControlHwnd)
 
-    ; 1 - Unchecked | 2 - Checked
     CheckboxState := (ItemState & LVIS_STATEIMAGEMASK) >> 12
 
-    return CheckboxState
+    return CheckboxState = 2
 }

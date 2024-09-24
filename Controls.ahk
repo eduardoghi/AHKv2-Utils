@@ -87,3 +87,15 @@ GetTabCaption(ControlHwnd, Index) {
 
     return local_text
 }
+
+GetListViewCheckboxState(ControlHwnd, RowIndex) {
+    static LVM_GETITEMSTATE := 0x102C
+        , LVIS_STATEIMAGEMASK := 0xF000
+
+    ItemState := SendMessage(LVM_GETITEMSTATE, RowIndex, LVIS_STATEIMAGEMASK, , "ahk_id " ControlHwnd)
+
+    ; 1 - Unchecked | 2 - Checked
+    CheckboxState := (ItemState & LVIS_STATEIMAGEMASK) >> 12
+
+    return CheckboxState
+}

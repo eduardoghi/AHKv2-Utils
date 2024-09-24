@@ -88,7 +88,7 @@ GetTabCaption(ControlHwnd, Index) {
     return local_text
 }
 
-GetListViewCheckboxState(ControlHwnd, RowIndex) {
+IsListViewCheckboxChecked(ControlHwnd, RowIndex) {
     static LVM_GETITEMSTATE := 0x102C
         , LVIS_STATEIMAGEMASK := 0xF000
 

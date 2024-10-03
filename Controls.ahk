@@ -99,3 +99,8 @@ IsListViewCheckboxChecked(ControlHwnd, RowIndex) {
 
     return CheckboxState = 2
 }
+
+SetTreeViewRowHeight(ControlHwnd, RowHeight) {
+    static TVM_SETITEMHEIGHT := 0x111B
+    SendMessage(TVM_SETITEMHEIGHT, RowHeight, 0, , "ahk_id " ControlHwnd)
+}

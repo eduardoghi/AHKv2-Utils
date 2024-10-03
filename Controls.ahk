@@ -1,7 +1,8 @@
 AddTab(TabText, ControlHwnd, Pos := GetTabCount(ControlHwnd) + 1) {
-    TCIF_TEXT := 0x0001
+    static TCIF_TEXT := 0x0001
+        , TCM_INSERTITEMW := 0x133E
+
     OffTxP := (3 * 4) + (A_PtrSize - 4)
-    TCM_INSERTITEMW := 0x133E
 
     Size := (5 * 4) + (2 * A_PtrSize) + (A_PtrSize - 4)
     TCITEM := Buffer(Size, 0)
@@ -13,23 +14,23 @@ AddTab(TabText, ControlHwnd, Pos := GetTabCount(ControlHwnd) + 1) {
 }
 
 RemoveTab(ControlHwnd, Item) {
-    TCM_DELETEITEM := 0x1308
+    static TCM_DELETEITEM := 0x1308
     SendMessage(TCM_DELETEITEM, Item -1, 0, , "ahk_id " ControlHwnd)
 }
 
 GetTabCount(ControlHwnd) {
-    TCM_GETITEMCOUNT := 0x1304 
+    static TCM_GETITEMCOUNT := 0x1304
     return SendMessage(TCM_GETITEMCOUNT, 0, 0, , "ahk_id " ControlHwnd)
 }
 
 GetSelTabIndex(ControlHwnd) {
-    TCM_GETCURSEL := 0x130B
+    static TCM_GETCURSEL := 0x130B
     return SendMessage(TCM_GETCURSEL, 0, 0, , "ahk_id " ControlHwnd) + 1
 }
 
 SetTabSelection(ControlHwnd, Index := 0) {
-    TCM_SETCURFOCUS := 0x1330
-    TCM_SETCURSEL := 0x130C
+    static TCM_SETCURFOCUS := 0x1330
+        , TCM_SETCURSEL := 0x130C
 
     SendMessage(TCM_SETCURFOCUS, Index, 0, , ControlHwnd)
     SendMessage(TCM_SETCURSEL, Index, 0, , ControlHwnd)

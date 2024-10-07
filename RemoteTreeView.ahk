@@ -1,4 +1,4 @@
-﻿
+
 ; AHK version:      v2.0-a
 
 #SingleInstance force
@@ -132,6 +132,9 @@ class RemoteTreeView
         TVS_EX_PARTIALCHECKBOXES := 0x0080    ; >= Vista
         TVS_EX_RICHTOOLTIP := 0x0010    ; >= Vista
         ; Others ===============================================================================================================
+        WM_KEYDOWN := 0x0100
+        VK_MULTIPLY := 0x6A
+
         ; Item flags
         TVIF_CHILDREN := 0x0040
         TVIF_DI_SETITEM := 0x1000
@@ -499,6 +502,7 @@ class RemoteTreeView
 	;----------------------------------------------------------------------------------------------
 	; Method: Expand
 	;         Expands or collapses the specified tree node
+    ;         Note: This method only affects the specified node itself and does not expand or collapse its child nodes.
 	;
 	; Parameters:
 	;         pItem			- Handle to the item
@@ -515,6 +519,76 @@ class RemoteTreeView
 		flag := DoExpand ? this.TVE_EXPAND : this.TVE_COLLAPSE
 		return SendMessage(this.TVM_EXPAND, flag, pItem, , "ahk_id " this.TVHwnd)
 	}
+
+    ;----------------------------------------------------------------------------------------------
+    ; Method: ExpandSelectedNode
+    ;         Expands the selected node and its child nodes.
+    ;
+    ; Parameters:
+    ;         None
+    ;
+    ; Returns:
+    ;         None
+    ;
+    ExpandSelectedNode() {
+        SendMessage(this.WM_KEYDOWN, this.VK_MULTIPLY, 0, , "ahk_id " this.TVHwnd)
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: ExpandAll
+    ;         Expands all nodes and its child nodes in the TreeView Root
+    ;
+    ; Parameters:
+    ;         None
+    ;
+    ; Returns:
+    ;         None
+    ;
+    ExpandAll() {
+        hItem := this.GetRoot()
+        while hItem {
+            this.SetSelection(hItem)
+            this.ExpandSelectedNode()
+            hItem := this.GetNext(hItem)
+        }
+    }
+
+    ;----------------------------------------------------------------------------------------------
+    ; Method: CollapseAll
+    ;         Collapses all nodes and their child nodes in the TreeView Root
+    ;
+    ; Parameters:
+    ;         None
+    ;
+    ; Returns:
+    ;         None
+    ;
+    CollapseAll() {
+        hItem := this.GetRoot()
+        while hItem {
+            this.CollapseNodeAndChildren(hItem)
+            hItem := this.GetNext(hItem)
+        }
+    }
+
+    ;----------------------------------------------------------------------------------------------
+    ; Method: CollapseNodeAndChildren
+    ;         Recursively collapses a node and its child nodes.
+    ;
+    ; Parameters:
+    ;         pItem - Handle to the item
+    ;
+    ; Returns:
+    ;         None
+    ;
+    CollapseNodeAndChildren(pItem) {
+        this.Expand(pItem, false) ; Collapse the current node
+        hChild := this.GetChild(pItem)
+        while hChild {
+            this.CollapseNodeAndChildren(hChild)
+            hChild := this.GetNext(hChild)
+        }
+    }
 
 	;----------------------------------------------------------------------------------------------
 	; Method: Check

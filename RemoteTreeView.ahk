@@ -266,7 +266,7 @@ class RemoteTreeView
     ; Returns:
     ;         Nothing
     ;
-    __New(TVHwnd){
+    __New(TVHwnd) {
         this.TVHwnd := TVHwnd
     }
 
@@ -287,7 +287,7 @@ class RemoteTreeView
     SetSelection(pItem, defaultAction := true) {
         ; ORI SendMessage TVM_SELECTITEM, TVGN_CARET|TVSI_NOSINGLEEXPAND, pItem, , % "ahk_id " this.TVHwnd
         result := SendMessage(this.TVM_SELECTITEM, this.TVGN_CARET, pItem, , "ahk_id " this.TVHwnd)
-        if (defaultAction){
+        if (defaultAction) {
             Controlsend("{Enter}", this.TVHwnd)
         }
         return result
@@ -311,7 +311,7 @@ class RemoteTreeView
     SetSelectionByText(text, defaultAction := true, index := 1) {
         ; hItem := "0"    ; Causes the loop's first iteration to start the search at the top of the tree.
         hItem := this.GetHandleByText(text, index)
-        if hItem{
+        if hItem {
             return this.SetSelection(hItem, defaultAction)
         }
         return false
@@ -332,12 +332,12 @@ class RemoteTreeView
         i := 0
         Loop {
             hItem := this.GetNext(hItem, "Full")
-            if !hItem{ ; No more items in tree.
+            if !hItem { ; No more items in tree.
                 return false
             }    
-            if (this.GetText(hItem)=Text){
+            if (this.GetText(hItem) = Text) {
                 i++
-                if (index = i){
+                if (index = i) {
                     return hItem
                 }
             }
@@ -452,7 +452,7 @@ class RemoteTreeView
 	;					MsgBox The next Item is %hItem%, whose text is "%ItemText%".
 	;				}
 	;
-    GetNext(pItem := 0, flag := ""){
+    GetNext(pItem := 0, flag := "") {
         static Root := -1
 
         if (RegExMatch(flag, "i)^\s*(F|Full)\s*$")) {
@@ -478,10 +478,12 @@ class RemoteTreeView
         }
 
         Root := -1
-        if (!pItem)
+        if (!pItem) {
             ErrorLevel := SendMessage(this.TVM_GETNEXTITEM, this.TVGN_ROOT, 0, , "ahk_id " this.TVHwnd)
-        else
+        } else {
             ErrorLevel := SendMessage(this.TVM_GETNEXTITEM, this.TVGN_NEXT, pItem, , "ahk_id " this.TVHwnd)
+        }
+
         return ErrorLevel
     }
 	;----------------------------------------------------------------------------------------------
@@ -494,7 +496,7 @@ class RemoteTreeView
 	; Returns:
 	;         Handle of the sibling above the specified item (or 0 if none).
 	;
-	GetPrev(pItem){
+	GetPrev(pItem) {
 		ErrorLevel := SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PREVIOUS, pItem, , "ahk_id " this.TVHwnd)
 		return ErrorLevel
 	}
@@ -515,7 +517,7 @@ class RemoteTreeView
 	; Returns:
 	;         Nonzero if the operation was successful, or zero otherwise.
 	;
-	Expand(pItem, DoExpand := true){
+	Expand(pItem, DoExpand := true) {
 		flag := DoExpand ? this.TVE_EXPAND : this.TVE_COLLAPSE
 		return SendMessage(this.TVM_EXPAND, flag, pItem, , "ahk_id " this.TVHwnd)
 	}
@@ -610,21 +612,23 @@ class RemoteTreeView
 	; Remarks:
 	;         This method makes pItem the current selection.
 	;
-	Check(pItem, fCheck, Force := true){
+	Check(pItem, fCheck, Force := true) {
 		SavedDelay := A_KeyDelay
 		SetKeyDelay(30)
 		
 		CurrentState := this.IsChecked(pItem, false)
-		if (CurrentState = -1) 
+		if (CurrentState = -1) {
 			if (Force) {
 				ControlSend("{Space}", , "ahk_id " this.TVHwnd)
 				CurrentState := this.IsChecked(pItem, false)
-			}
-			else 
+			} else {
 				return false
+            }
+        }
 		
-		if (CurrentState and not fCheck) or (not CurrentState and fCheck )
+		if (CurrentState and not fCheck) or (not CurrentState and fCheck ) {
 			ControlSend("{Space}", , "ahk_id " this.TVHwnd)
+        }
 		
 		SetKeyDelay(SavedDelay)
 		return true
@@ -643,19 +647,18 @@ class RemoteTreeView
     ;
     ; Fix from just me (http://ahkscript.org/boards/viewtopic.php?f=5&t=4998#p29339)
 	;
-    GetText(pItem){
-        this.TVM_GETITEM := 1 ? this.TVM_GETITEMW : this.TVM_GETITEMA
-
+    GetText(pItem) {
         ProcessId := WinGetpid("ahk_id " this.TVHwnd)
         hProcess := this.OpenProcess(this.PROCESS_VM_OPERATION|this.PROCESS_VM_READ
-                               |this.PROCESS_VM_WRITE|this.PROCESS_QUERY_INFORMATION                               , false, ProcessId)
+                               |this.PROCESS_VM_WRITE|this.PROCESS_QUERY_INFORMATION, false, ProcessId)
 
         ; Try to determine the bitness of the remote tree-view's process
         ProcessIs32Bit := A_PtrSize = 8 ? False : True
-        If (A_Is64bitOS) && DllCall("Kernel32.dll\IsWow64Process", "Ptr", hProcess, "int*", &WOW64:=true)
+        if (A_Is64bitOS && DllCall("Kernel32.dll\IsWow64Process", "Ptr", hProcess, "int*", &WOW64:=true)) {
             ProcessIs32Bit := WOW64
+        }
 
-        Size := ProcessIs32Bit ?  60 : 80 ; Size of a TVITEMEX structure
+        Size := ProcessIs32Bit ? 60 : 80 ; Size of a TVITEMEX structure
 
         _tvi := this.VirtualAllocEx(hProcess, 0, Size, this.MEM_COMMIT, this.PAGE_READWRITE)
         _txt := this.VirtualAllocEx(hProcess, 0, 256,  this.MEM_COMMIT, this.PAGE_READWRITE)
@@ -663,12 +666,11 @@ class RemoteTreeView
         ; TVITEMEX Structure
         tvi := Buffer(Size, 0) ; V1toV2: if 'tvi' is a UTF-16 string, use 'VarSetStrCapacity(&tvi, Size)'
         NumPut("UInt", this.TVIF_TEXT|this.TVIF_HANDLE, tvi, 0)
-        If (ProcessIs32Bit){
+        if (ProcessIs32Bit) {
             NumPut("UInt", pItem, tvi, 4)
             NumPut("UInt", _txt, tvi, 16)
             NumPut("UInt", 127, tvi, 20)
-        }
-        Else{
+        } else {
             NumPut("UInt64", pItem, tvi, 8)
             NumPut("UInt64", _txt, tvi, 24)
             NumPut("UInt", 127, tvi, 32)
@@ -676,7 +678,7 @@ class RemoteTreeView
 
         txt := Buffer(256, 0) ; V1toV2: if 'txt' is a UTF-16 string, use 'VarSetStrCapacity(&txt, 256)'
         this.WriteProcessMemory(hProcess, _tvi, tvi, Size)
-        SendMessage(this.TVM_GETITEM, 0, _tvi, , "ahk_id " this.TVHwnd)
+        SendMessage(this.TVM_GETITEMW, 0, _tvi, , "ahk_id " this.TVHwnd)
         this.ReadProcessMemory(hProcess, _txt, txt, 256)
 
         this.VirtualFreeEx(hProcess, _txt, 0, this.MEM_RELEASE)
@@ -700,9 +702,8 @@ class RemoteTreeView
 	;         or NULL otherwise. When the user completes or cancels editing, the edit control 
 	;         is destroyed and the handle is no longer valid.
 	;
-	EditLabel(pItem){
-		this.TVM_EDITLABEL := 1 ? this.TVM_EDITLABELW : this.TVM_EDITLABELA
-		return SendMessage(this.TVM_EDITLABEL, 0, pItem, , "ahk_id " this.TVHwnd)
+	EditLabel(pItem) {
+		return SendMessage(this.TVM_EDITLABELW, 0, pItem, , "ahk_id " this.TVHwnd)
 	}
 	
 	;----------------------------------------------------------------------------------------------
@@ -715,7 +716,7 @@ class RemoteTreeView
 	; Returns:
 	;         Returns the total number of expanded items in the control 
 	;
-	GetCount(){
+	GetCount() {
 		return SendMessage(this.TVM_GETCOUNT, 0, 0, , "ahk_id " this.TVHwnd)
 	}
 	
@@ -743,7 +744,7 @@ class RemoteTreeView
 	; 
 	;         This method makes pItem the current selection.
 	;
-	IsChecked(pItem, force := true){
+	IsChecked(pItem, force := true) {
 		SavedDelay := A_KeyDelay
 		SetKeyDelay(30)
 		
@@ -771,7 +772,7 @@ class RemoteTreeView
 	; Returns:
 	;         Returns true if the item is in bold, false otherwise.
 	;
-	IsBold(pItem){
+	IsBold(pItem) {
 		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
 		return (ErrorLevel & this.TVIS_BOLD) >> 4
 	}
@@ -786,7 +787,7 @@ class RemoteTreeView
 	; Returns:
 	;         Returns true if the item has children and is expanded, false otherwise.
 	;
-	IsExpanded(pItem){
+	IsExpanded(pItem) {
 		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
 		return (ErrorLevel & this.TVIS_EXPANDED) >> 5
 	}
@@ -801,7 +802,7 @@ class RemoteTreeView
 	; Returns:
 	;         Returns true if the item is selected, false otherwise.
 	;
-	IsSelected(pItem){
+	IsSelected(pItem) {
 		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
 		return (ErrorLevel & this.TVIS_SELECTED) >> 1
 	}
@@ -817,27 +818,28 @@ class RemoteTreeView
     ; Returns:
     ;         A text representation of the control content
     
-    GetControlContent(Level:=0, pItem:=0){
+    GetControlContent(Level := 0, pItem := 0) {
         passed := false
         ControlText := ""
         
         loop {
             pItem := SendMessage(this.TVM_GETNEXTITEM, passed ? this.TVGN_NEXT : this.TVGN_CHILD , pItem, ,  "ahk_id " this.TVHwnd)
-            if(pItem != 0){
+            if (pItem != 0) {
 
                 loop Level {
                     ControlText .= "`t"
                 }
                 ControlText .= this.GetText(pItem) "`n"
                 ; ControlText .= RegexReplace(this.GetText(pItem),"^[-\.]","`t", &donechanges,1) . "`n"
-                NextLevel := Level+1
+                NextLevel := Level + 1
 
-                ControlText .= this.GetControlContent(NextLevel,pItem)
+                ControlText .= this.GetControlContent(NextLevel, pItem)
                 passed := true
             } else {
                 break
             }
         }
+
         return ControlText
     }
 
@@ -851,15 +853,17 @@ class RemoteTreeView
     ;
     ; Returns:
     ;         The number of items
-    Wait(DelayMs:=300){
+    Wait(DelayMs := 300) {
         NumItems := -1
         Loop {
-            ErrorLevel := SendMessage(0x1105, 0, 0, , "ahk_id " this.TVHwnd)    ; 0x1105 is TVM_GETCOUNT
-            if (ErrorLevel != 0)
-                if (ErrorLevel != NumItems)
+            ErrorLevel := SendMessage(this.TVM_GETCOUNT, 0, 0, , "ahk_id " this.TVHwnd)
+            if (ErrorLevel != 0) {
+                if (ErrorLevel != NumItems) {
                     NumItems := ErrorLevel
-                else
+                } else {
                     break
+                }
+            }
             Sleep(DelayMs)
         }
         return ErrorLevel
@@ -883,7 +887,7 @@ class RemoteTreeView
     ;         If the function succeeds, the return value is an open handle to the specified process.
     ;         If the function fails, the return value is NULL.
     ;
-    OpenProcess(DesiredAccess, InheritHandle, ProcessId){
+    OpenProcess(DesiredAccess, InheritHandle, ProcessId) {
         return DllCall("OpenProcess"	             
                         , "Int", DesiredAccess				 
                         , "Int", InheritHandle				 
@@ -902,7 +906,7 @@ class RemoteTreeView
     ;         If the function succeeds, the return value is nonzero.
     ;         If the function fails, the return value is zero.
     ;
-    CloseHandle(hObject){
+    CloseHandle(hObject) {
         return DllCall("CloseHandle"	             
                         , "Ptr", hObject				 
                         , "Int")
@@ -954,7 +958,7 @@ class RemoteTreeView
     ;         If the function succeeds, the return value is the base address of the allocated region of pages.
     ;         If the function fails, the return value is NULL.
     ;
-    VirtualAllocEx(hProcess, Address, Size, AllocationType, ProtectType){
+    VirtualAllocEx(hProcess, Address, Size, AllocationType, ProtectType) {
         return DllCall("VirtualAllocEx"				 
                     , "Ptr", hProcess				 
                     , "Ptr", Address				 
@@ -1000,7 +1004,7 @@ class RemoteTreeView
     ;         If the function succeeds, the return value is a nonzero value.
     ;         If the function fails, the return value is 0 (zero). 
     ;
-    VirtualFreeEx(hProcess, Address, Size, FType){
+    VirtualFreeEx(hProcess, Address, Size, FType) {
         return DllCall("VirtualFreeEx"				 
                         , "Ptr", hProcess				 
                         , "Ptr", Address				 
@@ -1037,7 +1041,7 @@ class RemoteTreeView
     ;         If the function succeeds, the return value is a nonzero value.
     ;         If the function fails, the return value is 0 (zero). 
     ;
-    WriteProcessMemory(hProcess, BaseAddress, Buffer, Size, &NumberOfBytesWritten := 0){
+    WriteProcessMemory(hProcess, BaseAddress, Buffer, Size, &NumberOfBytesWritten := 0) {
         return DllCall("WriteProcessMemory"				 
                         , "Ptr", hProcess				 
                         , "Ptr", BaseAddress				 
@@ -1075,7 +1079,7 @@ class RemoteTreeView
     ;         If the function succeeds, the return value is a nonzero value.
     ;         If the function fails, the return value is 0 (zero). 
     ;
-    ReadProcessMemory(hProcess, BaseAddress, Buffer, Size, &NumberOfBytesRead := 0){
+    ReadProcessMemory(hProcess, BaseAddress, Buffer, Size, &NumberOfBytesRead := 0) {
         return DllCall("ReadProcessMemory"
                         , "Ptr", hProcess
                         , "Ptr", BaseAddress

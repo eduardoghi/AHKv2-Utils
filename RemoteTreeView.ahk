@@ -11,7 +11,7 @@ class RemoteTreeView
     ; JnLlnd (https://www.autohotkey.com/boards/viewtopic.php?f=5&t=4998#p29502)
     ; just me
     ; Ahk_user (Conversion to V2)
-	; https://github.com/dmtr99/RemoteTreeView-V2
+    ; https://github.com/dmtr99/RemoteTreeView-V2
 
     ; Constants for TreeView controls   
         WC_TREEVIEW := "SysTreeView32"
@@ -279,7 +279,7 @@ class RemoteTreeView
     ;         pItem			    - Handle to the item you wish selected
     ;         defaultAction     - Determines of the default action is activated
     ;                         true : Send an Enter (default)
-	;                         false : do noting
+    ;                         false : do noting
     ;
     ; Returns:
     ;         TRUE if successful, or FALSE otherwise
@@ -302,7 +302,7 @@ class RemoteTreeView
     ;         text			    - Text of the item you wish selected
     ;         defaultAction     - Determines of the default action is activated
     ;                               true : Send an Enter (default)
-	;                               false : do noting
+    ;                               false : do noting
     ;         index			    - Index of item if you do not want to use the first item
     ;
     ; Returns:
@@ -386,72 +386,72 @@ class RemoteTreeView
         return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_ROOT, 0, , "ahk_id " this.TVHwnd)
     }
     ;----------------------------------------------------------------------------------------------
-	; Method: GetParent
-	;         Retrieves an item's parent
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Handle to the parent of the specified item. Returns
-	;         NULL if the item being retrieved is the root node of the tree.
-	;
-	GetParent(pItem) {
-		return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PARENT, pItem, , "ahk_id " this.TVHwnd)
-	}
+    ; Method: GetParent
+    ;         Retrieves an item's parent
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Handle to the parent of the specified item. Returns
+    ;         NULL if the item being retrieved is the root node of the tree.
+    ;
+    GetParent(pItem) {
+        return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PARENT, pItem, , "ahk_id " this.TVHwnd)
+    }
 
-	;----------------------------------------------------------------------------------------------
-	; Method: GetChild
-	;         Retrieves an item's first child
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Handle to the first Child of the specified item, NULL otherwise.
-	;
-	GetChild(pItem) {
-		return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_CHILD, pItem, , "ahk_id " this.TVHwnd)
-	}
+    ;----------------------------------------------------------------------------------------------
+    ; Method: GetChild
+    ;         Retrieves an item's first child
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Handle to the first Child of the specified item, NULL otherwise.
+    ;
+    GetChild(pItem) {
+        return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_CHILD, pItem, , "ahk_id " this.TVHwnd)
+    }
 
-	;----------------------------------------------------------------------------------------------
-	; Method: GetNext
-	;         Returns the handle of the sibling below the specified item (or 0 if none).
-	;
-	; Parameters:
-	;         pItem			- (Optional) Handle to the item
-	;
-	;         flag          - (Optional) "FULL" or "F"
-	;
-	; Returns:
-	;         This method has the following modes:
-	;              1. When all parameters are omitted, it returns the handle
-	;                 of the first/top item in the TreeView (or 0 if none). 
-	;
-	;              2. When the only first parameter (pItem) is present, it returns the 
-	;                 handle of the sibling below the specified item (or 0 if none).
-	;                 If the first parameter is 0, it returns the handle of the first/top
-	;                 item in the TreeView (or 0 if none).
-	;
-	;              3. When the second parameter is "Full" or "F", the first time GetNext()
-	;                 is called the hItem passed is considered the "root" of a sub-tree that 
-	;                 will be transversed in a depth first manner. No nodes except the
-	;                 decendents of that "root" will be visited. To traverse the entire tree, 
-	;                 including the real root, pass zero in the first call.
-	;
-	;                 When all descendants have benn visited, the method returns zero.
-	;
-	; Example:
-	;				hItem = 0  ; Start the search at the top of the tree.
-	;				Loop
-	;				{
-	;					hItem := MyTV.GetNext(hItem, "Full")
-	;					if not hItem  ; No more items in tree.
-	;						break
-	;					ItemText := MyTV.GetText(hItem)
-	;					MsgBox The next Item is %hItem%, whose text is "%ItemText%".
-	;				}
-	;
+    ;----------------------------------------------------------------------------------------------
+    ; Method: GetNext
+    ;         Returns the handle of the sibling below the specified item (or 0 if none).
+    ;
+    ; Parameters:
+    ;         pItem			- (Optional) Handle to the item
+    ;
+    ;         flag          - (Optional) "FULL" or "F"
+    ;
+    ; Returns:
+    ;         This method has the following modes:
+    ;              1. When all parameters are omitted, it returns the handle
+    ;                 of the first/top item in the TreeView (or 0 if none). 
+    ;
+    ;              2. When the only first parameter (pItem) is present, it returns the 
+    ;                 handle of the sibling below the specified item (or 0 if none).
+    ;                 If the first parameter is 0, it returns the handle of the first/top
+    ;                 item in the TreeView (or 0 if none).
+    ;
+    ;              3. When the second parameter is "Full" or "F", the first time GetNext()
+    ;                 is called the hItem passed is considered the "root" of a sub-tree that 
+    ;                 will be transversed in a depth first manner. No nodes except the
+    ;                 decendents of that "root" will be visited. To traverse the entire tree, 
+    ;                 including the real root, pass zero in the first call.
+    ;
+    ;                 When all descendants have benn visited, the method returns zero.
+    ;
+    ; Example:
+    ;				hItem = 0  ; Start the search at the top of the tree.
+    ;				Loop
+    ;				{
+    ;					hItem := MyTV.GetNext(hItem, "Full")
+    ;					if not hItem  ; No more items in tree.
+    ;						break
+    ;					ItemText := MyTV.GetText(hItem)
+    ;					MsgBox The next Item is %hItem%, whose text is "%ItemText%".
+    ;				}
+    ;
     GetNext(pItem := 0, flag := "") {
         static Root := -1
 
@@ -486,41 +486,41 @@ class RemoteTreeView
 
         return ErrorLevel
     }
-	;----------------------------------------------------------------------------------------------
-	; Method: GetPrev
-	;         Returns the handle of the sibling above the specified item (or 0 if none).
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Handle of the sibling above the specified item (or 0 if none).
-	;
-	GetPrev(pItem) {
-		ErrorLevel := SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PREVIOUS, pItem, , "ahk_id " this.TVHwnd)
-		return ErrorLevel
-	}
-	
-	;----------------------------------------------------------------------------------------------
-	; Method: Expand
-	;         Expands or collapses the specified tree node
+    ;----------------------------------------------------------------------------------------------
+    ; Method: GetPrev
+    ;         Returns the handle of the sibling above the specified item (or 0 if none).
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Handle of the sibling above the specified item (or 0 if none).
+    ;
+    GetPrev(pItem) {
+        ErrorLevel := SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PREVIOUS, pItem, , "ahk_id " this.TVHwnd)
+        return ErrorLevel
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: Expand
+    ;         Expands or collapses the specified tree node
     ;         Note: This method only affects the specified node itself and does not expand or collapse its child nodes.
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	;         flag			- Determines whether the node is expanded or collapsed.
-	;                         true : expand the node (default)
-	;                         false : collapse the node
-	;
-	;
-	; Returns:
-	;         Nonzero if the operation was successful, or zero otherwise.
-	;
-	Expand(pItem, DoExpand := true) {
-		flag := DoExpand ? this.TVE_EXPAND : this.TVE_COLLAPSE
-		return SendMessage(this.TVM_EXPAND, flag, pItem, , "ahk_id " this.TVHwnd)
-	}
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ;         flag			- Determines whether the node is expanded or collapsed.
+    ;                         true : expand the node (default)
+    ;                         false : collapse the node
+    ;
+    ;
+    ; Returns:
+    ;         Nonzero if the operation was successful, or zero otherwise.
+    ;
+    Expand(pItem, DoExpand := true) {
+        flag := DoExpand ? this.TVE_EXPAND : this.TVE_COLLAPSE
+        return SendMessage(this.TVM_EXPAND, flag, pItem, , "ahk_id " this.TVHwnd)
+    }
 
     ;----------------------------------------------------------------------------------------------
     ; Method: ExpandSelectedNode
@@ -592,47 +592,47 @@ class RemoteTreeView
         }
     }
 
-	;----------------------------------------------------------------------------------------------
-	; Method: Check
-	;         Changes the state of a treeview item's check box
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	;         fCheck        - If true, check the node
-	;                         If false, uncheck the node
-	;
-	;         Force			- If true (default), prevents this method from failing due to 
-	;                         the node having an invalid initial state. See IsChecked 
-	;                         method for more info.
-	;
-	; Returns:
-	;         Returns true if if successful, otherwise false
-	;
-	; Remarks:
-	;         This method makes pItem the current selection.
-	;
-	Check(pItem, fCheck, Force := true) {
-		SavedDelay := A_KeyDelay
-		SetKeyDelay(30)
-		
-		CurrentState := this.IsChecked(pItem, false)
-		if (CurrentState = -1) {
-			if (Force) {
-				ControlSend("{Space}", , "ahk_id " this.TVHwnd)
-				CurrentState := this.IsChecked(pItem, false)
-			} else {
-				return false
+    ;----------------------------------------------------------------------------------------------
+    ; Method: Check
+    ;         Changes the state of a treeview item's check box
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ;         fCheck        - If true, check the node
+    ;                         If false, uncheck the node
+    ;
+    ;         Force			- If true (default), prevents this method from failing due to 
+    ;                         the node having an invalid initial state. See IsChecked 
+    ;                         method for more info.
+    ;
+    ; Returns:
+    ;         Returns true if if successful, otherwise false
+    ;
+    ; Remarks:
+    ;         This method makes pItem the current selection.
+    ;
+    Check(pItem, fCheck, Force := true) {
+        SavedDelay := A_KeyDelay
+        SetKeyDelay(30)
+        
+        CurrentState := this.IsChecked(pItem, false)
+        if (CurrentState = -1) {
+            if (Force) {
+                ControlSend("{Space}", , "ahk_id " this.TVHwnd)
+                CurrentState := this.IsChecked(pItem, false)
+            } else {
+                return false
             }
         }
-		
-		if (CurrentState and not fCheck) or (not CurrentState and fCheck ) {
-			ControlSend("{Space}", , "ahk_id " this.TVHwnd)
+        
+        if (CurrentState and not fCheck) or (not CurrentState and fCheck ) {
+            ControlSend("{Space}", , "ahk_id " this.TVHwnd)
         }
-		
-		SetKeyDelay(SavedDelay)
-		return true
-	}
+        
+        SetKeyDelay(SavedDelay)
+        return true
+    }
 
     ;----------------------------------------------------------------------------------------------
     ; Method: GetText
@@ -646,7 +646,7 @@ class RemoteTreeView
     ;         the first 127 characters are retrieved.
     ;
     ; Fix from just me (http://ahkscript.org/boards/viewtopic.php?f=5&t=4998#p29339)
-	;
+    ;
     GetText(pItem) {
         ProcessId := WinGetpid("ahk_id " this.TVHwnd)
         hProcess := this.OpenProcess(this.PROCESS_VM_OPERATION|this.PROCESS_VM_READ
@@ -729,124 +729,124 @@ class RemoteTreeView
         return iImage
     }
  
-	;----------------------------------------------------------------------------------------------
-	; Method: EditLabel
-	;         Begins in-place editing of the specified item's text, replacing the text of the 
-	;         item with a single-line edit control containing the text. This method implicitly 
-	;         selects and focuses the specified item.
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Returns the handle to the edit control used to edit the item text if successful, 
-	;         or NULL otherwise. When the user completes or cancels editing, the edit control 
-	;         is destroyed and the handle is no longer valid.
-	;
-	EditLabel(pItem) {
-		return SendMessage(this.TVM_EDITLABELW, 0, pItem, , "ahk_id " this.TVHwnd)
-	}
-	
-	;----------------------------------------------------------------------------------------------
-	; Method: GetCount
-	;         Returns the total number of expanded items in the control
-	;
-	; Parameters:
-	;         None
-	;
-	; Returns:
-	;         Returns the total number of expanded items in the control 
-	;
-	GetCount() {
-		return SendMessage(this.TVM_GETCOUNT, 0, 0, , "ahk_id " this.TVHwnd)
-	}
-	
-	;----------------------------------------------------------------------------------------------
-	; Method: IsChecked
-	;         Retrieves an item's checked status
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	;         force			- If true (default), forces the node to return a valid state.
-	;                         Since this involves toggling the state of the check box, it
-	;                         can have undesired side effects. Make this false to disable 
-	;                         this feature.
-	; Returns:
-	;         Returns 1 if the item is checked, 0 if unchecked.
-	;
-	;         Returns -1 if the checkbox state cannot be determined because no checkbox
-	;         image is currently associated with the node and Force is false. 
-	;
-	; Remarks:
-	;         Due to a "feature" of Windows, a checkbox can be displayed even if no checkbox image
-	;         is associated with the node. It is important to either check the actual value returned 
-	;         or make the Force parameter true.
-	; 
-	;         This method makes pItem the current selection.
-	;
-	IsChecked(pItem, force := true) {
-		SavedDelay := A_KeyDelay
-		SetKeyDelay(30)
-		
-		this.SetSelection(pItem)
-		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
-		State := ((ErrorLevel & this.TVIS_STATEIMAGEMASK) >> 12) - 1
-		
-		if (State = -1 and force) {
-			ControlSend("{Space 2}", , "ahk_id " this.TVHwnd)
-			ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
-			State := ((ErrorLevel & this.TVIS_STATEIMAGEMASK) >> 12) - 1
-		}
-		
-		SetKeyDelay(SavedDelay)
-		return State
-	}
-	
-	;----------------------------------------------------------------------------------------------
-	; Method: IsBold
-	;         Check if a node is in bold font
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Returns true if the item is in bold, false otherwise.
-	;
-	IsBold(pItem) {
-		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
-		return (ErrorLevel & this.TVIS_BOLD) >> 4
-	}
-	
-	;----------------------------------------------------------------------------------------------
-	; Method: IsExpanded
-	;         Check if a node has children and is expanded
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Returns true if the item has children and is expanded, false otherwise.
-	;
-	IsExpanded(pItem) {
-		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
-		return (ErrorLevel & this.TVIS_EXPANDED) >> 5
-	}
-	
-	;----------------------------------------------------------------------------------------------
-	; Method: IsSelected
-	;         Check if a node is Selected
-	;
-	; Parameters:
-	;         pItem			- Handle to the item
-	;
-	; Returns:
-	;         Returns true if the item is selected, false otherwise.
-	;
-	IsSelected(pItem) {
-		ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
-		return (ErrorLevel & this.TVIS_SELECTED) >> 1
-	}
+    ;----------------------------------------------------------------------------------------------
+    ; Method: EditLabel
+    ;         Begins in-place editing of the specified item's text, replacing the text of the 
+    ;         item with a single-line edit control containing the text. This method implicitly 
+    ;         selects and focuses the specified item.
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Returns the handle to the edit control used to edit the item text if successful, 
+    ;         or NULL otherwise. When the user completes or cancels editing, the edit control 
+    ;         is destroyed and the handle is no longer valid.
+    ;
+    EditLabel(pItem) {
+        return SendMessage(this.TVM_EDITLABELW, 0, pItem, , "ahk_id " this.TVHwnd)
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: GetCount
+    ;         Returns the total number of expanded items in the control
+    ;
+    ; Parameters:
+    ;         None
+    ;
+    ; Returns:
+    ;         Returns the total number of expanded items in the control 
+    ;
+    GetCount() {
+        return SendMessage(this.TVM_GETCOUNT, 0, 0, , "ahk_id " this.TVHwnd)
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: IsChecked
+    ;         Retrieves an item's checked status
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ;         force			- If true (default), forces the node to return a valid state.
+    ;                         Since this involves toggling the state of the check box, it
+    ;                         can have undesired side effects. Make this false to disable 
+    ;                         this feature.
+    ; Returns:
+    ;         Returns 1 if the item is checked, 0 if unchecked.
+    ;
+    ;         Returns -1 if the checkbox state cannot be determined because no checkbox
+    ;         image is currently associated with the node and Force is false. 
+    ;
+    ; Remarks:
+    ;         Due to a "feature" of Windows, a checkbox can be displayed even if no checkbox image
+    ;         is associated with the node. It is important to either check the actual value returned 
+    ;         or make the Force parameter true.
+    ; 
+    ;         This method makes pItem the current selection.
+    ;
+    IsChecked(pItem, force := true) {
+        SavedDelay := A_KeyDelay
+        SetKeyDelay(30)
+        
+        this.SetSelection(pItem)
+        ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
+        State := ((ErrorLevel & this.TVIS_STATEIMAGEMASK) >> 12) - 1
+        
+        if (State = -1 and force) {
+            ControlSend("{Space 2}", , "ahk_id " this.TVHwnd)
+            ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
+            State := ((ErrorLevel & this.TVIS_STATEIMAGEMASK) >> 12) - 1
+        }
+        
+        SetKeyDelay(SavedDelay)
+        return State
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: IsBold
+    ;         Check if a node is in bold font
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Returns true if the item is in bold, false otherwise.
+    ;
+    IsBold(pItem) {
+        ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
+        return (ErrorLevel & this.TVIS_BOLD) >> 4
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: IsExpanded
+    ;         Check if a node has children and is expanded
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Returns true if the item has children and is expanded, false otherwise.
+    ;
+    IsExpanded(pItem) {
+        ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
+        return (ErrorLevel & this.TVIS_EXPANDED) >> 5
+    }
+    
+    ;----------------------------------------------------------------------------------------------
+    ; Method: IsSelected
+    ;         Check if a node is Selected
+    ;
+    ; Parameters:
+    ;         pItem			- Handle to the item
+    ;
+    ; Returns:
+    ;         Returns true if the item is selected, false otherwise.
+    ;
+    IsSelected(pItem) {
+        ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
+        return (ErrorLevel & this.TVIS_SELECTED) >> 1
+    }
 
     ;----------------------------------------------------------------------------------------------
     ; Method: GetControlText

@@ -652,11 +652,7 @@ class RemoteTreeView
         hProcess := this.OpenProcess(this.PROCESS_VM_OPERATION|this.PROCESS_VM_READ
                                |this.PROCESS_VM_WRITE|this.PROCESS_QUERY_INFORMATION, false, ProcessId)
 
-        ; Try to determine the bitness of the remote tree-view's process
-        ProcessIs32Bit := A_PtrSize = 8 ? False : True
-        if (A_Is64bitOS && DllCall("Kernel32.dll\IsWow64Process", "Ptr", hProcess, "int*", &WOW64:=true)) {
-            ProcessIs32Bit := WOW64
-        }
+        ProcessIs32Bit := this.IsProcessIs32Bit(hProcess)
 
         Size := ProcessIs32Bit ? 60 : 80 ; Size of a TVITEMEX structure
 
@@ -686,6 +682,51 @@ class RemoteTreeView
         this.CloseHandle(hProcess)
 
         return StrGet(txt)
+    }
+
+    ;----------------------------------------------------------------------------------------------
+    ; Method: GetImageIndex
+    ;         Retrieves the image index of the specified tree-view item
+    ;
+    ; Parameters:
+    ;         pItem         - Handle to the item
+    ;
+    ; Returns:
+    ;         The image index of the specified item
+    ;
+    GetImageIndex(pItem) {
+        ProcessId := WinGetpid("ahk_id " this.TVHwnd)
+        hProcess := this.OpenProcess(this.PROCESS_VM_OPERATION | this.PROCESS_VM_READ | this.PROCESS_VM_WRITE | this.PROCESS_QUERY_INFORMATION, false, ProcessId)
+    
+        ProcessIs32Bit := this.IsProcessIs32Bit(hProcess)
+    
+        Size := ProcessIs32Bit ? 60 : 80 ; Size of a TVITEMEX structure
+    
+        _tvi := this.VirtualAllocEx(hProcess, 0, Size, this.MEM_COMMIT, this.PAGE_READWRITE)
+    
+        ; TVITEMEX Structure
+        tvi := Buffer(Size, 0)
+        NumPut("UInt", this.TVIF_IMAGE | this.TVIF_HANDLE, tvi, 0)
+        if (ProcessIs32Bit) {
+            NumPut("UInt", pItem, tvi, 4)
+            NumPut("UInt", 0, tvi, 16)
+        } else {
+            NumPut("UInt64", pItem, tvi, 8)
+            NumPut("UInt64", 0, tvi, 24)
+        }
+    
+        this.WriteProcessMemory(hProcess, _tvi, tvi, Size)
+        SendMessage(this.TVM_GETITEMW, 0, _tvi, , "ahk_id " this.TVHwnd)
+        
+        BufferOutput := Buffer(Size, 0)
+        this.ReadProcessMemory(hProcess, _tvi, BufferOutput, Size)
+    
+        this.VirtualFreeEx(hProcess, _tvi, 0, this.MEM_RELEASE)
+        this.CloseHandle(hProcess)
+    
+        iImage := ProcessIs32Bit ? NumGet(BufferOutput, 24, "UInt") : NumGet(BufferOutput, 40, "UInt")
+    
+        return iImage
     }
  
 	;----------------------------------------------------------------------------------------------
@@ -870,6 +911,24 @@ class RemoteTreeView
     }
 
     ; The following Methods are general, but put inside the class to prevent them to conflict with other libraries
+
+    ;----------------------------------------------------------------------------------------------
+    ; Method: IsProcessIs32Bit
+    ;         Determines if the process associated with the TreeView is 32-bit
+    ;
+    ; Parameters:
+    ;         hProcess      - Handle to the process
+    ;
+    ; Returns:
+    ;         True if the process is 32-bit, False otherwise
+    ;
+    IsProcessIs32Bit(hProcess) {
+        ProcessIs32Bit := A_PtrSize = 8 ? False : True
+        if (A_Is64bitOS && DllCall("Kernel32.dll\IsWow64Process", "Ptr", hProcess, "int*", &WOW64 := true)) {
+            ProcessIs32Bit := WOW64
+        }
+        return ProcessIs32Bit
+    }
 
     ;----------------------------------------------------------------------------------------------
     ; Method: OpenProcess

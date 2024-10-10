@@ -849,41 +849,44 @@ class RemoteTreeView
     }
 
     ;----------------------------------------------------------------------------------------------
-    ; Method: GetControlText
+    ; Method: GetControlContent
     ;     Returns a text representation of the control content, indented with tabs.
     ;
     ; Parameters:
-    ;         Level         - (Optional) Indention level
-    ;         pItem   - (Optional) Handle to the starting item
+    ;         Level              - (Optional) Initial indentation level
+    ;         pItem              - (Optional) Handle to the starting item
+    ;         includeImageIndex  - (Optional) If true, includes the image index for each item
+    ;         separator          - (Optional) Separator between image index and item text
     ;
     ; Returns:
     ;         A text representation of the control content
-    
-    GetControlContent(Level := 0, pItem := 0) {
+    GetControlContent(Level := 0, pItem := 0, includeImageIndex := false, separator := "¦") {
         passed := false
         ControlText := ""
         
         loop {
             pItem := SendMessage(this.TVM_GETNEXTITEM, passed ? this.TVGN_NEXT : this.TVGN_CHILD , pItem, ,  "ahk_id " this.TVHwnd)
             if (pItem != 0) {
-
                 loop Level {
                     ControlText .= "`t"
                 }
-                ControlText .= this.GetText(pItem) "`n"
-                ; ControlText .= RegexReplace(this.GetText(pItem),"^[-\.]","`t", &donechanges,1) . "`n"
+                nodeText := this.GetText(pItem)
+                if (includeImageIndex) {
+                    imageIndex := this.GetImageIndex(pItem)
+                    ControlText .= imageIndex . separator . nodeText . "`n"
+                } else {
+                    ControlText .= nodeText . "`n"
+                }
                 NextLevel := Level + 1
-
-                ControlText .= this.GetControlContent(NextLevel, pItem)
+                ControlText .= this.GetControlContent(NextLevel, pItem, includeImageIndex, separator)
                 passed := true
             } else {
                 break
             }
         }
-
+    
         return ControlText
     }
-
     ;----------------------------------------------------------------------------------------------
     ; Method: Wait
     ;     Waits untill the TreeView is loaded

@@ -110,3 +110,8 @@ SetReadOnly(ControlHwnd, ReadOnly := true) {
     ReadOnlyFlag := ReadOnly ? 1 : 0
     SendMessage(EM_SETREADONLY, ReadOnlyFlag, 0, ControlHwnd)
 }
+
+GetListViewItemCount(ControlHwnd) {
+    static LVM_GETITEMCOUNT := 0x1004
+    return SendMessage(LVM_GETITEMCOUNT, 0, 0, , "ahk_id " ControlHwnd)
+}

@@ -115,3 +115,11 @@ GetListViewItemCount(ControlHwnd) {
     static LVM_GETITEMCOUNT := 0x1004
     return SendMessage(LVM_GETITEMCOUNT, 0, 0, , "ahk_id " ControlHwnd)
 }
+
+ControlExists(Control, WinTitle := "", WinText := "", ExcludeTitle := "", ExcludeText := "") {
+    try {
+        return ControlGetHwnd(Control, WinTitle, WinText, ExcludeTitle, ExcludeText)
+    } catch {
+        return false
+    }
+}

@@ -123,3 +123,8 @@ ControlExists(Control, WinTitle := "", WinText := "", ExcludeTitle := "", Exclud
         return false
     }
 }
+
+GetCharLimit(ControlHwnd) {
+    static EM_GETLIMITTEXT := 0xD5
+    return SendMessage(EM_GETLIMITTEXT, 0, 0, , "ahk_id " ControlHwnd)
+}

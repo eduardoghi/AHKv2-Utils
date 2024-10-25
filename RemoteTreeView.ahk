@@ -12,249 +12,249 @@ class RemoteTreeView
     ; just me
     ; Ahk_user (Conversion to V2)
     ; https://github.com/dmtr99/RemoteTreeView-V2
+    ; eduardoghi
 
-    ; Constants for TreeView controls   
-        WC_TREEVIEW := "SysTreeView32"
-        ; Messages =============================================================================================================
-        TVM_CREATEDRAGIMAGE := 0x1112    ; (TV_FIRST + 18)
-        TVM_DELETEITEM := 0x1101    ; (TV_FIRST + 1)
-        TVM_EDITLABELA := 0x110E    ; (TV_FIRST + 14)
-        TVM_EDITLABELW := 0x1141    ; (TV_FIRST + 65)
-        TVM_ENDEDITLABELNOW := 0x1116    ; (TV_FIRST + 22)
-        TVM_ENSUREVISIBLE := 0x1114    ; (TV_FIRST + 20)
-        TVM_EXPAND := 0x1102    ; (TV_FIRST + 2)
-        TVM_GETBKCOLOR := 0x112F    ; (TV_FIRST + 31)
-        TVM_GETCOUNT := 0x1105    ; (TV_FIRST + 5)
-        TVM_GETEDITCONTROL := 0x110F    ; (TV_FIRST + 15)
-        TVM_GETEXTENDEDSTYLE := 0x112D    ; (TV_FIRST + 45)
-        TVM_GETIMAGELIST := 0x1108    ; (TV_FIRST + 8)
-        TVM_GETINDENT := 0x1106    ; (TV_FIRST + 6)
-        TVM_GETINSERTMARKCOLOR := 0x1126    ; (TV_FIRST + 38)
-        TVM_GETISEARCHSTRINGA := 0x1117    ; (TV_FIRST + 23)
-        TVM_GETISEARCHSTRINGW := 0x1140    ; (TV_FIRST + 64)
-        TVM_GETITEMA := 0x110C    ; (TV_FIRST + 12)
-        TVM_GETITEMHEIGHT := 0x111C    ; (TV_FIRST + 28)
-        TVM_GETITEMPARTRECT := 0x1148    ; (TV_FIRST + 72) ; >= Vista
-        TVM_GETITEMRECT := 0x1104    ; (TV_FIRST + 4)
-        TVM_GETITEMSTATE := 0x1127    ; (TV_FIRST + 39)
-        TVM_GETITEMW := 0x113E    ; (TV_FIRST + 62)
-        TVM_GETLINECOLOR := 0x1129    ; (TV_FIRST + 41)
-        TVM_GETNEXTITEM := 0x110A    ; (TV_FIRST + 10)
-        TVM_GETSCROLLTIME := 0x1122    ; (TV_FIRST + 34)
-        TVM_GETSELECTEDCOUNT := 0x1146    ; (TV_FIRST + 70) ; >= Vista
-        TVM_GETTEXTCOLOR := 0x1120    ; (TV_FIRST + 32)
-        TVM_GETTOOLTIPS := 0x1119    ; (TV_FIRST + 25)
-        TVM_GETUNICODEFORMAT := 0x2006    ; (CCM_FIRST + 6) CCM_GETUNICODEFORMAT
-        TVM_GETVISIBLECOUNT := 0x1110    ; (TV_FIRST + 16)
-        TVM_HITTEST := 0x1111    ; (TV_FIRST + 17)
-        TVM_INSERTITEMA := 0x1100    ; (TV_FIRST + 0)
-        TVM_INSERTITEMW := 0x1142    ; (TV_FIRST + 50)
-        TVM_MAPACCIDTOHTREEITEM := 0x112A    ; (TV_FIRST + 42)
-        TVM_MAPHTREEITEMTOACCID := 0x112B    ; (TV_FIRST + 43)
-        TVM_SELECTITEM := 0x110B    ; (TV_FIRST + 11)
-        TVM_SETAUTOSCROLLINFO := 0x113B    ; (TV_FIRST + 59)
-        TVM_SETBKCOLOR := 0x111D    ; (TV_FIRST + 29)
-        TVM_SETEXTENDEDSTYLE := 0x112C    ; (TV_FIRST + 44)
-        TVM_SETIMAGELIST := 0x1109    ; (TV_FIRST + 9)
-        TVM_SETINDENT := 0x1107    ; (TV_FIRST + 7)
-        TVM_SETINSERTMARK := 0x111A    ; (TV_FIRST + 26)
-        TVM_SETINSERTMARKCOLOR := 0x1125    ; (TV_FIRST + 37)
-        TVM_SETITEMA := 0x110D    ; (TV_FIRST + 13)
-        TVM_SETITEMHEIGHT := 0x111B    ; (TV_FIRST + 27)
-        TVM_SETITEMW := 0x113F    ; (TV_FIRST + 63)
-        TVM_SETLINECOLOR := 0x1128    ; (TV_FIRST + 40)
-        TVM_SETSCROLLTIME := 0x1121    ; (TV_FIRST + 33)
-        TVM_SETTEXTCOLOR := 0x111E    ; (TV_FIRST + 30)
-        TVM_SETTOOLTIPS := 0x1118    ; (TV_FIRST + 24)
-        TVM_SETUNICODEFORMAT := 0x2005    ; (CCM_FIRST + 5) ; CCM_SETUNICODEFORMAT
-        TVM_SHOWINFOTIP := 0x1147    ; (TV_FIRST + 71) ; >= Vista
-        TVM_SORTCHILDREN := 0x1113    ; (TV_FIRST + 19)
-        TVM_SORTCHILDRENCB := 0x1115    ; (TV_FIRST + 21)
-        ; Notifications ========================================================================================================
-        TVN_ASYNCDRAW := -420    ; (TVN_FIRST - 20) >= Vista
-        TVN_BEGINDRAGA := -427    ; (TVN_FIRST - 7)
-        TVN_BEGINDRAGW := -456    ; (TVN_FIRST - 56)
-        TVN_BEGINLABELEDITA := -410    ; (TVN_FIRST - 10)
-        TVN_BEGINLABELEDITW := -456    ; (TVN_FIRST - 59)
-        TVN_BEGINRDRAGA := -408    ; (TVN_FIRST - 8)
-        TVN_BEGINRDRAGW := -457    ; (TVN_FIRST - 57)
-        TVN_DELETEITEMA := -409    ; (TVN_FIRST - 9)
-        TVN_DELETEITEMW := -458    ; (TVN_FIRST - 58)
-        TVN_ENDLABELEDITA := -411    ; (TVN_FIRST - 11)
-        TVN_ENDLABELEDITW := -460    ; (TVN_FIRST - 60)
-        TVN_GETDISPINFOA := -403    ; (TVN_FIRST - 3)
-        TVN_GETDISPINFOW := -452    ; (TVN_FIRST - 52)
-        TVN_GETINFOTIPA := -412    ; (TVN_FIRST - 13)
-        TVN_GETINFOTIPW := -414    ; (TVN_FIRST - 14)
-        TVN_ITEMCHANGEDA := -418    ; (TVN_FIRST - 18) ; >= Vista
-        TVN_ITEMCHANGEDW := -419    ; (TVN_FIRST - 19) ; >= Vista
-        TVN_ITEMCHANGINGA := -416    ; (TVN_FIRST - 16) ; >= Vista
-        TVN_ITEMCHANGINGW := -417    ; (TVN_FIRST - 17) ; >= Vista
-        TVN_ITEMEXPANDEDA := -406    ; (TVN_FIRST - 6)
-        TVN_ITEMEXPANDEDW := -455    ; (TVN_FIRST - 55)
-        TVN_ITEMEXPANDINGA := -405    ; (TVN_FIRST - 5)
-        TVN_ITEMEXPANDINGW := -454    ; (TVN_FIRST - 54)
-        TVN_KEYDOWN := -412    ; (TVN_FIRST - 12)
-        TVN_SELCHANGEDA := -402    ; (TVN_FIRST - 2)
-        TVN_SELCHANGEDW := -451    ; (TVN_FIRST - 51)
-        TVN_SELCHANGINGA := -401    ; (TVN_FIRST - 1)
-        TVN_SELCHANGINGW := -450    ; (TVN_FIRST - 50)
-        TVN_SETDISPINFOA := -404    ; (TVN_FIRST - 4)
-        TVN_SETDISPINFOW := -453    ; (TVN_FIRST - 53)
-        TVN_SINGLEEXPAND := -415    ; (TVN_FIRST - 15)
-        ; Styles ===============================================================================================================
-        TVS_CHECKBOXES := 0x0100
-        TVS_DISABLEDRAGDROP := 0x0010
-        TVS_EDITLABELS := 0x0008
-        TVS_FULLROWSELECT := 0x1000
-        TVS_HASBUTTONS := 0x0001
-        TVS_HASLINES := 0x0002
-        TVS_INFOTIP := 0x0800
-        TVS_LINESATROOT := 0x0004
-        TVS_NOHSCROLL := 0x8000    ; TVS_NOSCROLL overrides this
-        TVS_NONEVENHEIGHT := 0x4000
-        TVS_NOSCROLL := 0x2000
-        TVS_NOTOOLTIPS := 0x0080
-        TVS_RTLREADING := 0x0040
-        TVS_SHOWSELALWAYS := 0x0020
-        TVS_SINGLEEXPAND := 0x0400
-        TVS_TRACKSELECT := 0x0200
-        ; Exstyles =============================================================================================================
-        TVS_EX_AUTOHSCROLL := 0x0020    ; >= Vista
-        TVS_EX_DIMMEDCHECKBOXES := 0x0200    ; >= Vista
-        TVS_EX_DOUBLEBUFFER := 0x0004    ; >= Vista
-        TVS_EX_DRAWIMAGEASYNC := 0x0400    ; >= Vista
-        TVS_EX_EXCLUSIONCHECKBOXES := 0x0100    ; >= Vista
-        TVS_EX_FADEINOUTEXPANDOS := 0x0040    ; >= Vista
-        TVS_EX_MULTISELECT := 0x0002    ; >= Vista - Not supported. Do not use.
-        TVS_EX_NOINDENTSTATE := 0x0008    ; >= Vista
-        TVS_EX_NOSINGLECOLLAPSE := 0x0001    ; >= Vista - Intended for internal use; not recommended for use in applications.
-        TVS_EX_PARTIALCHECKBOXES := 0x0080    ; >= Vista
-        TVS_EX_RICHTOOLTIP := 0x0010    ; >= Vista
-        ; Others ===============================================================================================================
-        WM_KEYDOWN := 0x0100
-        VK_MULTIPLY := 0x6A
+    WC_TREEVIEW := "SysTreeView32"
+    ; Messages =============================================================================================================
+    TVM_CREATEDRAGIMAGE := 0x1112    ; (TV_FIRST + 18)
+    TVM_DELETEITEM := 0x1101    ; (TV_FIRST + 1)
+    TVM_EDITLABELA := 0x110E    ; (TV_FIRST + 14)
+    TVM_EDITLABELW := 0x1141    ; (TV_FIRST + 65)
+    TVM_ENDEDITLABELNOW := 0x1116    ; (TV_FIRST + 22)
+    TVM_ENSUREVISIBLE := 0x1114    ; (TV_FIRST + 20)
+    TVM_EXPAND := 0x1102    ; (TV_FIRST + 2)
+    TVM_GETBKCOLOR := 0x112F    ; (TV_FIRST + 31)
+    TVM_GETCOUNT := 0x1105    ; (TV_FIRST + 5)
+    TVM_GETEDITCONTROL := 0x110F    ; (TV_FIRST + 15)
+    TVM_GETEXTENDEDSTYLE := 0x112D    ; (TV_FIRST + 45)
+    TVM_GETIMAGELIST := 0x1108    ; (TV_FIRST + 8)
+    TVM_GETINDENT := 0x1106    ; (TV_FIRST + 6)
+    TVM_GETINSERTMARKCOLOR := 0x1126    ; (TV_FIRST + 38)
+    TVM_GETISEARCHSTRINGA := 0x1117    ; (TV_FIRST + 23)
+    TVM_GETISEARCHSTRINGW := 0x1140    ; (TV_FIRST + 64)
+    TVM_GETITEMA := 0x110C    ; (TV_FIRST + 12)
+    TVM_GETITEMHEIGHT := 0x111C    ; (TV_FIRST + 28)
+    TVM_GETITEMPARTRECT := 0x1148    ; (TV_FIRST + 72) ; >= Vista
+    TVM_GETITEMRECT := 0x1104    ; (TV_FIRST + 4)
+    TVM_GETITEMSTATE := 0x1127    ; (TV_FIRST + 39)
+    TVM_GETITEMW := 0x113E    ; (TV_FIRST + 62)
+    TVM_GETLINECOLOR := 0x1129    ; (TV_FIRST + 41)
+    TVM_GETNEXTITEM := 0x110A    ; (TV_FIRST + 10)
+    TVM_GETSCROLLTIME := 0x1122    ; (TV_FIRST + 34)
+    TVM_GETSELECTEDCOUNT := 0x1146    ; (TV_FIRST + 70) ; >= Vista
+    TVM_GETTEXTCOLOR := 0x1120    ; (TV_FIRST + 32)
+    TVM_GETTOOLTIPS := 0x1119    ; (TV_FIRST + 25)
+    TVM_GETUNICODEFORMAT := 0x2006    ; (CCM_FIRST + 6) CCM_GETUNICODEFORMAT
+    TVM_GETVISIBLECOUNT := 0x1110    ; (TV_FIRST + 16)
+    TVM_HITTEST := 0x1111    ; (TV_FIRST + 17)
+    TVM_INSERTITEMA := 0x1100    ; (TV_FIRST + 0)
+    TVM_INSERTITEMW := 0x1142    ; (TV_FIRST + 50)
+    TVM_MAPACCIDTOHTREEITEM := 0x112A    ; (TV_FIRST + 42)
+    TVM_MAPHTREEITEMTOACCID := 0x112B    ; (TV_FIRST + 43)
+    TVM_SELECTITEM := 0x110B    ; (TV_FIRST + 11)
+    TVM_SETAUTOSCROLLINFO := 0x113B    ; (TV_FIRST + 59)
+    TVM_SETBKCOLOR := 0x111D    ; (TV_FIRST + 29)
+    TVM_SETEXTENDEDSTYLE := 0x112C    ; (TV_FIRST + 44)
+    TVM_SETIMAGELIST := 0x1109    ; (TV_FIRST + 9)
+    TVM_SETINDENT := 0x1107    ; (TV_FIRST + 7)
+    TVM_SETINSERTMARK := 0x111A    ; (TV_FIRST + 26)
+    TVM_SETINSERTMARKCOLOR := 0x1125    ; (TV_FIRST + 37)
+    TVM_SETITEMA := 0x110D    ; (TV_FIRST + 13)
+    TVM_SETITEMHEIGHT := 0x111B    ; (TV_FIRST + 27)
+    TVM_SETITEMW := 0x113F    ; (TV_FIRST + 63)
+    TVM_SETLINECOLOR := 0x1128    ; (TV_FIRST + 40)
+    TVM_SETSCROLLTIME := 0x1121    ; (TV_FIRST + 33)
+    TVM_SETTEXTCOLOR := 0x111E    ; (TV_FIRST + 30)
+    TVM_SETTOOLTIPS := 0x1118    ; (TV_FIRST + 24)
+    TVM_SETUNICODEFORMAT := 0x2005    ; (CCM_FIRST + 5) ; CCM_SETUNICODEFORMAT
+    TVM_SHOWINFOTIP := 0x1147    ; (TV_FIRST + 71) ; >= Vista
+    TVM_SORTCHILDREN := 0x1113    ; (TV_FIRST + 19)
+    TVM_SORTCHILDRENCB := 0x1115    ; (TV_FIRST + 21)
+    ; Notifications ========================================================================================================
+    TVN_ASYNCDRAW := -420    ; (TVN_FIRST - 20) >= Vista
+    TVN_BEGINDRAGA := -427    ; (TVN_FIRST - 7)
+    TVN_BEGINDRAGW := -456    ; (TVN_FIRST - 56)
+    TVN_BEGINLABELEDITA := -410    ; (TVN_FIRST - 10)
+    TVN_BEGINLABELEDITW := -456    ; (TVN_FIRST - 59)
+    TVN_BEGINRDRAGA := -408    ; (TVN_FIRST - 8)
+    TVN_BEGINRDRAGW := -457    ; (TVN_FIRST - 57)
+    TVN_DELETEITEMA := -409    ; (TVN_FIRST - 9)
+    TVN_DELETEITEMW := -458    ; (TVN_FIRST - 58)
+    TVN_ENDLABELEDITA := -411    ; (TVN_FIRST - 11)
+    TVN_ENDLABELEDITW := -460    ; (TVN_FIRST - 60)
+    TVN_GETDISPINFOA := -403    ; (TVN_FIRST - 3)
+    TVN_GETDISPINFOW := -452    ; (TVN_FIRST - 52)
+    TVN_GETINFOTIPA := -412    ; (TVN_FIRST - 13)
+    TVN_GETINFOTIPW := -414    ; (TVN_FIRST - 14)
+    TVN_ITEMCHANGEDA := -418    ; (TVN_FIRST - 18) ; >= Vista
+    TVN_ITEMCHANGEDW := -419    ; (TVN_FIRST - 19) ; >= Vista
+    TVN_ITEMCHANGINGA := -416    ; (TVN_FIRST - 16) ; >= Vista
+    TVN_ITEMCHANGINGW := -417    ; (TVN_FIRST - 17) ; >= Vista
+    TVN_ITEMEXPANDEDA := -406    ; (TVN_FIRST - 6)
+    TVN_ITEMEXPANDEDW := -455    ; (TVN_FIRST - 55)
+    TVN_ITEMEXPANDINGA := -405    ; (TVN_FIRST - 5)
+    TVN_ITEMEXPANDINGW := -454    ; (TVN_FIRST - 54)
+    TVN_KEYDOWN := -412    ; (TVN_FIRST - 12)
+    TVN_SELCHANGEDA := -402    ; (TVN_FIRST - 2)
+    TVN_SELCHANGEDW := -451    ; (TVN_FIRST - 51)
+    TVN_SELCHANGINGA := -401    ; (TVN_FIRST - 1)
+    TVN_SELCHANGINGW := -450    ; (TVN_FIRST - 50)
+    TVN_SETDISPINFOA := -404    ; (TVN_FIRST - 4)
+    TVN_SETDISPINFOW := -453    ; (TVN_FIRST - 53)
+    TVN_SINGLEEXPAND := -415    ; (TVN_FIRST - 15)
+    ; Styles ===============================================================================================================
+    TVS_CHECKBOXES := 0x0100
+    TVS_DISABLEDRAGDROP := 0x0010
+    TVS_EDITLABELS := 0x0008
+    TVS_FULLROWSELECT := 0x1000
+    TVS_HASBUTTONS := 0x0001
+    TVS_HASLINES := 0x0002
+    TVS_INFOTIP := 0x0800
+    TVS_LINESATROOT := 0x0004
+    TVS_NOHSCROLL := 0x8000    ; TVS_NOSCROLL overrides this
+    TVS_NONEVENHEIGHT := 0x4000
+    TVS_NOSCROLL := 0x2000
+    TVS_NOTOOLTIPS := 0x0080
+    TVS_RTLREADING := 0x0040
+    TVS_SHOWSELALWAYS := 0x0020
+    TVS_SINGLEEXPAND := 0x0400
+    TVS_TRACKSELECT := 0x0200
+    ; Exstyles =============================================================================================================
+    TVS_EX_AUTOHSCROLL := 0x0020    ; >= Vista
+    TVS_EX_DIMMEDCHECKBOXES := 0x0200    ; >= Vista
+    TVS_EX_DOUBLEBUFFER := 0x0004    ; >= Vista
+    TVS_EX_DRAWIMAGEASYNC := 0x0400    ; >= Vista
+    TVS_EX_EXCLUSIONCHECKBOXES := 0x0100    ; >= Vista
+    TVS_EX_FADEINOUTEXPANDOS := 0x0040    ; >= Vista
+    TVS_EX_MULTISELECT := 0x0002    ; >= Vista - Not supported. Do not use.
+    TVS_EX_NOINDENTSTATE := 0x0008    ; >= Vista
+    TVS_EX_NOSINGLECOLLAPSE := 0x0001    ; >= Vista - Intended for internal use; not recommended for use in applications.
+    TVS_EX_PARTIALCHECKBOXES := 0x0080    ; >= Vista
+    TVS_EX_RICHTOOLTIP := 0x0010    ; >= Vista
+    ; Others ===============================================================================================================
+    WM_KEYDOWN := 0x0100
+    VK_MULTIPLY := 0x6A
 
-        ; Item flags
-        TVIF_CHILDREN := 0x0040
-        TVIF_DI_SETITEM := 0x1000
-        TVIF_EXPANDEDIMAGE := 0x0200    ; >= Vista
-        TVIF_HANDLE := 0x0010
-        TVIF_IMAGE := 0x0002
-        TVIF_INTEGRAL := 0x0080
-        TVIF_PARAM := 0x0004
-        TVIF_SELECTEDIMAGE := 0x0020
-        TVIF_STATE := 0x0008
-        TVIF_STATEEX := 0x0100    ; >= Vista
-        TVIF_TEXT := 0x0001
-        ; Item states
-        TVIS_BOLD := 0x0010
-        TVIS_CUT := 0x0004
-        TVIS_DROPHILITED := 0x0008
-        TVIS_EXPANDED := 0x0020
-        TVIS_EXPANDEDONCE := 0x0040
-        TVIS_EXPANDPARTIAL := 0x0080
-        TVIS_OVERLAYMASK := 0x0F00
-        TVIS_SELECTED := 0x0002
-        TVIS_STATEIMAGEMASK := 0xF000
-        TVIS_USERMASK := 0xF000
-        ; TVITEMEX uStateEx
-        TVIS_EX_ALL := 0x0002    ; not documented
-        TVIS_EX_DISABLED := 0x0002    ; >= Vista
-        TVIS_EX_FLAT := 0x0001
-        ; TVINSERTSTRUCT hInsertAfter
-        TVI_FIRST := -65535    ; (-0x0FFFF)
-        TVI_LAST := -65534    ; (-0x0FFFE)
-        TVI_ROOT := -65536    ; (-0x10000)
-        TVI_SORT := -65533    ; (-0x0FFFD)
-        ; TVM_EXPAND wParam
-        TVE_COLLAPSE := 0x0001
-        TVE_COLLAPSERESET := 0x8000
-        TVE_EXPAND := 0x0002
-        TVE_EXPANDPARTIAL := 0x4000
-        TVE_TOGGLE := 0x0003
-        ; TVM_GETIMAGELIST wParam
-        TVSIL_NORMAL := 0
-        TVSIL_STATE := 2
-        ; TVM_GETNEXTITEM wParam
-        TVGN_CARET := 0x0009
-        TVGN_CHILD := 0x0004
-        TVGN_DROPHILITE := 0x0008
-        TVGN_FIRSTVISIBLE := 0x0005
-        TVGN_LASTVISIBLE := 0x000A
-        TVGN_NEXT := 0x0001
-        TVGN_NEXTSELECTED := 0x000B    ; >= Vista (MSDN)
-        TVGN_NEXTVISIBLE := 0x0006
-        TVGN_PARENT := 0x0003
-        TVGN_PREVIOUS := 0x0002
-        TVGN_PREVIOUSVISIBLE := 0x0007
-        TVGN_ROOT := 0x0000
-        ; TVM_SELECTITEM wParam
-        TVSI_NOSINGLEEXPAND := 0x8000    ; Should not conflict with TVGN flags.
-        ; TVHITTESTINFO flags
-        TVHT_ABOVE := 0x0100
-        TVHT_BELOW := 0x0200
-        TVHT_NOWHERE := 0x0001
-        TVHT_ONITEMBUTTON := 0x0010
-        TVHT_ONITEMICON := 0x0002
-        TVHT_ONITEMINDENT := 0x0008
-        TVHT_ONITEMLABEL := 0x0004
-        TVHT_ONITEMRIGHT := 0x0020
-        TVHT_ONITEMSTATEICON := 0x0040
-        TVHT_TOLEFT := 0x0800
-        TVHT_TORIGHT := 0x0400
-        TVHT_ONITEM := 0x0046    ; (TVHT_ONITEMICON | TVHT_ONITEMLABEL | TVHT_ONITEMSTATEICON)
-        ; TVGETITEMPARTRECTINFO partID (>= Vista)
-        TVGIPR_BUTTON := 0x0001
-        ; NMTREEVIEW action
-        TVC_BYKEYBOARD := 0x0002
-        TVC_BYMOUSE := 0x0001
-        TVC_UNKNOWN := 0x0000
-        ; TVN_SINGLEEXPAND return codes
-        TVNRET_DEFAULT := 0
-        TVNRET_SKIPOLD := 1
-        TVNRET_SKIPNEW := 2
-        ; ======================================================================================================================
+    ; Item flags
+    TVIF_CHILDREN := 0x0040
+    TVIF_DI_SETITEM := 0x1000
+    TVIF_EXPANDEDIMAGE := 0x0200    ; >= Vista
+    TVIF_HANDLE := 0x0010
+    TVIF_IMAGE := 0x0002
+    TVIF_INTEGRAL := 0x0080
+    TVIF_PARAM := 0x0004
+    TVIF_SELECTEDIMAGE := 0x0020
+    TVIF_STATE := 0x0008
+    TVIF_STATEEX := 0x0100    ; >= Vista
+    TVIF_TEXT := 0x0001
+    ; Item states
+    TVIS_BOLD := 0x0010
+    TVIS_CUT := 0x0004
+    TVIS_DROPHILITED := 0x0008
+    TVIS_EXPANDED := 0x0020
+    TVIS_EXPANDEDONCE := 0x0040
+    TVIS_EXPANDPARTIAL := 0x0080
+    TVIS_OVERLAYMASK := 0x0F00
+    TVIS_SELECTED := 0x0002
+    TVIS_STATEIMAGEMASK := 0xF000
+    TVIS_USERMASK := 0xF000
+    ; TVITEMEX uStateEx
+    TVIS_EX_ALL := 0x0002    ; not documented
+    TVIS_EX_DISABLED := 0x0002    ; >= Vista
+    TVIS_EX_FLAT := 0x0001
+    ; TVINSERTSTRUCT hInsertAfter
+    TVI_FIRST := -65535    ; (-0x0FFFF)
+    TVI_LAST := -65534    ; (-0x0FFFE)
+    TVI_ROOT := -65536    ; (-0x10000)
+    TVI_SORT := -65533    ; (-0x0FFFD)
+    ; TVM_EXPAND wParam
+    TVE_COLLAPSE := 0x0001
+    TVE_COLLAPSERESET := 0x8000
+    TVE_EXPAND := 0x0002
+    TVE_EXPANDPARTIAL := 0x4000
+    TVE_TOGGLE := 0x0003
+    ; TVM_GETIMAGELIST wParam
+    TVSIL_NORMAL := 0
+    TVSIL_STATE := 2
+    ; TVM_GETNEXTITEM wParam
+    TVGN_CARET := 0x0009
+    TVGN_CHILD := 0x0004
+    TVGN_DROPHILITE := 0x0008
+    TVGN_FIRSTVISIBLE := 0x0005
+    TVGN_LASTVISIBLE := 0x000A
+    TVGN_NEXT := 0x0001
+    TVGN_NEXTSELECTED := 0x000B    ; >= Vista (MSDN)
+    TVGN_NEXTVISIBLE := 0x0006
+    TVGN_PARENT := 0x0003
+    TVGN_PREVIOUS := 0x0002
+    TVGN_PREVIOUSVISIBLE := 0x0007
+    TVGN_ROOT := 0x0000
+    ; TVM_SELECTITEM wParam
+    TVSI_NOSINGLEEXPAND := 0x8000    ; Should not conflict with TVGN flags.
+    ; TVHITTESTINFO flags
+    TVHT_ABOVE := 0x0100
+    TVHT_BELOW := 0x0200
+    TVHT_NOWHERE := 0x0001
+    TVHT_ONITEMBUTTON := 0x0010
+    TVHT_ONITEMICON := 0x0002
+    TVHT_ONITEMINDENT := 0x0008
+    TVHT_ONITEMLABEL := 0x0004
+    TVHT_ONITEMRIGHT := 0x0020
+    TVHT_ONITEMSTATEICON := 0x0040
+    TVHT_TOLEFT := 0x0800
+    TVHT_TORIGHT := 0x0400
+    TVHT_ONITEM := 0x0046    ; (TVHT_ONITEMICON | TVHT_ONITEMLABEL | TVHT_ONITEMSTATEICON)
+    ; TVGETITEMPARTRECTINFO partID (>= Vista)
+    TVGIPR_BUTTON := 0x0001
+    ; NMTREEVIEW action
+    TVC_BYKEYBOARD := 0x0002
+    TVC_BYMOUSE := 0x0001
+    TVC_UNKNOWN := 0x0000
+    ; TVN_SINGLEEXPAND return codes
+    TVNRET_DEFAULT := 0
+    TVNRET_SKIPOLD := 1
+    TVNRET_SKIPNEW := 2
+    ; ======================================================================================================================
 
-        PAGE_NOACCESS := 0x01
-        PAGE_READONLY := 0x02
-        PAGE_READWRITE := 0x04
-        PAGE_WRITECOPY := 0x08
-        PAGE_EXECUTE := 0x10
-        PAGE_EXECUTE_READ := 0x20
-        PAGE_EXECUTE_READWRITE := 0x40
-        PAGE_EXECUTE_WRITECOPY := 0x80
-        PAGE_GUARD := 0x100
-        PAGE_NOCACHE := 0x200
-        PAGE_WRITECOMBINE := 0x400
-        MEM_COMMIT := 0x1000
-        MEM_RESERVE := 0x2000
-        MEM_DECOMMIT := 0x4000
-        MEM_RELEASE := 0x8000
-        MEM_FREE := 0x10000
-        MEM_PRIVATE := 0x20000
-        MEM_MAPPED := 0x40000
-        MEM_RESET := 0x80000
-        MEM_TOP_DOWN := 0x100000
-        MEM_WRITE_WATCH := 0x200000
-        MEM_PHYSICAL := 0x400000
-        MEM_ROTATE := 0x800000
-        MEM_LARGE_PAGES := 0x20000000
-        MEM_4MB_PAGES := 0x80000000
+    PAGE_NOACCESS := 0x01
+    PAGE_READONLY := 0x02
+    PAGE_READWRITE := 0x04
+    PAGE_WRITECOPY := 0x08
+    PAGE_EXECUTE := 0x10
+    PAGE_EXECUTE_READ := 0x20
+    PAGE_EXECUTE_READWRITE := 0x40
+    PAGE_EXECUTE_WRITECOPY := 0x80
+    PAGE_GUARD := 0x100
+    PAGE_NOCACHE := 0x200
+    PAGE_WRITECOMBINE := 0x400
+    MEM_COMMIT := 0x1000
+    MEM_RESERVE := 0x2000
+    MEM_DECOMMIT := 0x4000
+    MEM_RELEASE := 0x8000
+    MEM_FREE := 0x10000
+    MEM_PRIVATE := 0x20000
+    MEM_MAPPED := 0x40000
+    MEM_RESET := 0x80000
+    MEM_TOP_DOWN := 0x100000
+    MEM_WRITE_WATCH := 0x200000
+    MEM_PHYSICAL := 0x400000
+    MEM_ROTATE := 0x800000
+    MEM_LARGE_PAGES := 0x20000000
+    MEM_4MB_PAGES := 0x80000000
 
-        PROCESS_TERMINATE := (0x0001)
-        PROCESS_CREATE_THREAD := (0x0002)
-        PROCESS_SET_SESSIONID := (0x0004)
-        PROCESS_VM_OPERATION := (0x0008)
-        PROCESS_VM_READ := (0x0010)
-        PROCESS_VM_WRITE := (0x0020)
-        PROCESS_DUP_HANDLE := (0x0040)
-        PROCESS_CREATE_PROCESS := (0x0080)
-        PROCESS_SET_QUOTA := (0x0100)
-        PROCESS_SET_INFORMATION := (0x0200)
-        PROCESS_QUERY_INFORMATION := (0x0400)
-        PROCESS_SUSPEND_RESUME := (0x0800)
-        PROCESS_QUERY_LIMITED_INFORMATION := (0x1000)
+    PROCESS_TERMINATE := (0x0001)
+    PROCESS_CREATE_THREAD := (0x0002)
+    PROCESS_SET_SESSIONID := (0x0004)
+    PROCESS_VM_OPERATION := (0x0008)
+    PROCESS_VM_READ := (0x0010)
+    PROCESS_VM_WRITE := (0x0020)
+    PROCESS_DUP_HANDLE := (0x0040)
+    PROCESS_CREATE_PROCESS := (0x0080)
+    PROCESS_SET_QUOTA := (0x0100)
+    PROCESS_SET_INFORMATION := (0x0200)
+    PROCESS_QUERY_INFORMATION := (0x0400)
+    PROCESS_SUSPEND_RESUME := (0x0800)
+    PROCESS_QUERY_LIMITED_INFORMATION := (0x1000)
 
     ;----------------------------------------------------------------------------------------------
     ; Method: __New
@@ -270,70 +270,27 @@ class RemoteTreeView
         this.TVHwnd := TVHwnd
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: SetSelection
-    ;         Makes the given item selected and expanded. Optionally scrolls the
-    ;         TreeView so the item is visible.
-    ;
-    ; Parameters:
-    ;         pItem			    - Handle to the item you wish selected
-    ;         defaultAction     - Determines of the default action is activated
-    ;                         true : Send an Enter (default)
-    ;                         false : do noting
-    ;         setFocus          - If true, focuses the TreeView before selecting the item.
-    ;                             Note: When the TreeView is not focused, the item will be selected 
-    ;                             but may not be highlighted.
-    ;
-    ; Returns:
-    ;         TRUE if successful, or FALSE otherwise
-    ;
+    ; Added setFocus parameter because when the TreeView is not focused, the item will still be selected but may not be highlighted.
     SetSelection(pItem, defaultAction := true, setFocus := false) {
         if (setFocus) {
             ControlFocus(this.TVHwnd)
         }
         
-        ; ORI SendMessage TVM_SELECTITEM, TVGN_CARET|TVSI_NOSINGLEEXPAND, pItem, , % "ahk_id " this.TVHwnd
         result := SendMessage(this.TVM_SELECTITEM, this.TVGN_CARET, pItem, , "ahk_id " this.TVHwnd)
         if (defaultAction) {
             Controlsend("{Enter}", this.TVHwnd)
         }
         return result
-        ; return SendMessage(this.TVM_SELECTITEM, this.TVGN_FIRSTVISIBLE, pItem, , "ahk_id " this.TVHwnd) ; Seemed not to work
     }
-    ;----------------------------------------------------------------------------------------------
-    ; Method: SetSelectionByText
-    ;         Makes the given item selected and expanded. Optionally scrolls the
-    ;         TreeView so the item is visible.
-    ;
-    ; Parameters:
-    ;         text			    - Text of the item you wish selected
-    ;         defaultAction     - Determines of the default action is activated
-    ;                               true : Send an Enter (default)
-    ;                               false : do noting
-    ;         index			    - Index of item if you do not want to use the first item
-    ;
-    ; Returns:
-    ;         TRUE if successful, or FALSE otherwise
-    ;
+
     SetSelectionByText(text, defaultAction := true, index := 1) {
-        ; hItem := "0"    ; Causes the loop's first iteration to start the search at the top of the tree.
         hItem := this.GetHandleByText(text, index)
         if hItem {
             return this.SetSelection(hItem, defaultAction)
         }
         return false
     }
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetHandleByText
-    ;         Retrieves the currently item with a specific text
-    ;
-    ; Parameters:
-    ;         text			- Text of the item
-    ;         index			- Index of item if you do not want to use the first item
-    ;
-    ; Returns:
-    ;         Handle of Item
-    ;
+    
     GetHandleByText(Text, index := 1) {
         hItem := "0"    ; Causes the loop's first iteration to start the search at the top of the tree.
         i := 0
@@ -352,71 +309,23 @@ class RemoteTreeView
         return false
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetSelection
-    ;         Retrieves the currently selected item
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         Handle to the selected item if successful, Null otherwise.
-    ;
     GetSelection() {
         return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_CARET, 0, , "ahk_id " this.TVHwnd)
     }
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetSelectionText
-    ;         Retrieves the currently selected text
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         text of the selected item if successful, Null otherwise.
-    ;
+ 
     GetSelectionText() {
         return this.GetText(this.GetSelection())
     }
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetRoot
-    ;         Retrieves the root item of the treeview
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         Handle to the topmost or very first item of the tree-view control
-    ;         if successful, NULL otherwise.
-    ;
+
     GetRoot() {
         return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_ROOT, 0, , "ahk_id " this.TVHwnd)
     }
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetParent
-    ;         Retrieves an item's parent
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ; Returns:
-    ;         Handle to the parent of the specified item. Returns
-    ;         NULL if the item being retrieved is the root node of the tree.
-    ;
+
     GetParent(pItem) {
         return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PARENT, pItem, , "ahk_id " this.TVHwnd)
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetChild
-    ;         Retrieves an item's first child
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ; Returns:
-    ;         Handle to the first Child of the specified item, NULL otherwise.
-    ;
+    ; Retrieves an item's first child
     GetChild(pItem) {
         return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_CHILD, pItem, , "ahk_id " this.TVHwnd)
     }
@@ -493,66 +402,25 @@ class RemoteTreeView
 
         return ErrorLevel
     }
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetPrev
-    ;         Returns the handle of the sibling above the specified item (or 0 if none).
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ; Returns:
-    ;         Handle of the sibling above the specified item (or 0 if none).
-    ;
+
+    ; Returns the handle of the sibling above the specified item (or 0 if none).
     GetPrev(pItem) {
         ErrorLevel := SendMessage(this.TVM_GETNEXTITEM, this.TVGN_PREVIOUS, pItem, , "ahk_id " this.TVHwnd)
         return ErrorLevel
     }
-    
-    ;----------------------------------------------------------------------------------------------
-    ; Method: Expand
-    ;         Expands or collapses the specified tree node
-    ;         Note: This method only affects the specified node itself and does not expand or collapse its child nodes.
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ;         flag			- Determines whether the node is expanded or collapsed.
-    ;                         true : expand the node (default)
-    ;                         false : collapse the node
-    ;
-    ;
-    ; Returns:
-    ;         Nonzero if the operation was successful, or zero otherwise.
-    ;
+
+    ; This method only affects the specified node itself and does not expand or collapse its child nodes.
     Expand(pItem, DoExpand := true) {
         flag := DoExpand ? this.TVE_EXPAND : this.TVE_COLLAPSE
         return SendMessage(this.TVM_EXPAND, flag, pItem, , "ahk_id " this.TVHwnd)
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: ExpandSelectedNode
-    ;         Expands the selected node and its child nodes.
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         None
-    ;
+    ; Expands the selected node and its child nodes.
     ExpandSelectedNode() {
         SendMessage(this.WM_KEYDOWN, this.VK_MULTIPLY, 0, , "ahk_id " this.TVHwnd)
     }
-    
-    ;----------------------------------------------------------------------------------------------
-    ; Method: ExpandAll
-    ;         Expands all nodes and its child nodes in the TreeView Root
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         None
-    ;
+
+    ; Expands all nodes and its child nodes in the TreeView Root
     ExpandAll() {
         hItem := this.GetRoot()
         while hItem {
@@ -562,16 +430,7 @@ class RemoteTreeView
         }
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: CollapseAll
-    ;         Collapses all nodes and their child nodes in the TreeView Root
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         None
-    ;
+    ; Collapses all nodes and their child nodes in the TreeView Root
     CollapseAll() {
         hItem := this.GetRoot()
         while hItem {
@@ -580,18 +439,9 @@ class RemoteTreeView
         }
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: CollapseNodeAndChildren
-    ;         Recursively collapses a node and its child nodes.
-    ;
-    ; Parameters:
-    ;         pItem - Handle to the item
-    ;
-    ; Returns:
-    ;         None
-    ;
+    ; Recursively collapses a node and its child nodes.
     CollapseNodeAndChildren(pItem) {
-        this.Expand(pItem, false) ; Collapse the current node
+        this.Expand(pItem, false)
         hChild := this.GetChild(pItem)
         while hChild {
             this.CollapseNodeAndChildren(hChild)
@@ -641,19 +491,7 @@ class RemoteTreeView
         return true
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetText
-    ;         Retrieves the text/name of the specified node
-    ;
-    ; Parameters:
-    ;         pItem         - Handle to the item
-    ;
-    ; Returns:
-    ;         The text/name of the specified Item. If the text is longer than 127, only
-    ;         the first 127 characters are retrieved.
-    ;
-    ; Fix from just me (http://ahkscript.org/boards/viewtopic.php?f=5&t=4998#p29339)
-    ;
+    ; If the text is longer than 127, only the first 127 characters are retrieved.
     GetText(pItem) {
         ProcessId := WinGetpid("ahk_id " this.TVHwnd)
         hProcess := this.OpenProcess(this.PROCESS_VM_OPERATION|this.PROCESS_VM_READ
@@ -691,16 +529,6 @@ class RemoteTreeView
         return StrGet(txt)
     }
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetImageIndex
-    ;         Retrieves the image index of the specified tree-view item
-    ;
-    ; Parameters:
-    ;         pItem         - Handle to the item
-    ;
-    ; Returns:
-    ;         The image index of the specified item
-    ;
     GetImageIndex(pItem) {
         ProcessId := WinGetpid("ahk_id " this.TVHwnd)
         hProcess := this.OpenProcess(this.PROCESS_VM_OPERATION | this.PROCESS_VM_READ | this.PROCESS_VM_WRITE | this.PROCESS_QUERY_INFORMATION, false, ProcessId)
@@ -754,16 +582,6 @@ class RemoteTreeView
         return SendMessage(this.TVM_EDITLABELW, 0, pItem, , "ahk_id " this.TVHwnd)
     }
     
-    ;----------------------------------------------------------------------------------------------
-    ; Method: GetCount
-    ;         Returns the total number of expanded items in the control
-    ;
-    ; Parameters:
-    ;         None
-    ;
-    ; Returns:
-    ;         Returns the total number of expanded items in the control 
-    ;
     GetCount() {
         return SendMessage(this.TVM_GETCOUNT, 0, 0, , "ahk_id " this.TVHwnd)
     }
@@ -810,46 +628,18 @@ class RemoteTreeView
         return State
     }
     
-    ;----------------------------------------------------------------------------------------------
-    ; Method: IsBold
-    ;         Check if a node is in bold font
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ; Returns:
-    ;         Returns true if the item is in bold, false otherwise.
-    ;
+    ; Check if a node is in bold font
     IsBold(pItem) {
         ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
         return (ErrorLevel & this.TVIS_BOLD) >> 4
     }
     
-    ;----------------------------------------------------------------------------------------------
-    ; Method: IsExpanded
-    ;         Check if a node has children and is expanded
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ; Returns:
-    ;         Returns true if the item has children and is expanded, false otherwise.
-    ;
+    ; Check if a node has children and is expanded
     IsExpanded(pItem) {
         ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
         return (ErrorLevel & this.TVIS_EXPANDED) >> 5
     }
     
-    ;----------------------------------------------------------------------------------------------
-    ; Method: IsSelected
-    ;         Check if a node is Selected
-    ;
-    ; Parameters:
-    ;         pItem			- Handle to the item
-    ;
-    ; Returns:
-    ;         Returns true if the item is selected, false otherwise.
-    ;
     IsSelected(pItem) {
         ErrorLevel := SendMessage(this.TVM_GETITEMSTATE, pItem, 0, , "ahk_id " this.TVHwnd)
         return (ErrorLevel & this.TVIS_SELECTED) >> 1
@@ -922,16 +712,7 @@ class RemoteTreeView
 
     ; The following Methods are general, but put inside the class to prevent them to conflict with other libraries
 
-    ;----------------------------------------------------------------------------------------------
-    ; Method: IsProcessIs32Bit
-    ;         Determines if the process associated with the TreeView is 32-bit
-    ;
-    ; Parameters:
-    ;         hProcess      - Handle to the process
-    ;
-    ; Returns:
-    ;         True if the process is 32-bit, False otherwise
-    ;
+    ; Determines if the process associated with the TreeView is 32-bit
     IsProcessIs32Bit(hProcess) {
         ProcessIs32Bit := A_PtrSize = 8 ? False : True
         if (A_Is64bitOS && DllCall("Kernel32.dll\IsWow64Process", "Ptr", hProcess, "int*", &WOW64 := true)) {

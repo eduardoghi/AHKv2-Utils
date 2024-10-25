@@ -283,10 +283,10 @@ class RemoteTreeView
         return result
     }
 
-    SetSelectionByText(text, defaultAction := true, index := 1) {
+    SetSelectionByText(text, defaultAction := true, index := 1, setFocus := false) {
         hItem := this.GetHandleByText(text, index)
         if hItem {
-            return this.SetSelection(hItem, defaultAction)
+            return this.SetSelection(hItem, defaultAction, setFocus)
         }
         return false
     }

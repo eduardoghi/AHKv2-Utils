@@ -55,3 +55,27 @@ ExecuteQuery(Connection, SqlQuery) {
         return
     }
 }
+
+BeginTransaction(Connection) {
+    try {
+        Connection.BeginTrans()
+    } catch as e {
+        MsgBox "Error starting the transaction: " e.Message
+    }
+}
+
+CommitTransaction(Connection) {
+    try {
+        Connection.CommitTrans()
+    } catch as e {
+        MsgBox "Error committing the transaction: " e.Message
+    }
+}
+
+RollbackTransaction(Connection) {
+    try {
+        Connection.RollbackTrans()
+    } catch as e {
+        MsgBox "Error rolling back the transaction: " e.Message
+    }
+}

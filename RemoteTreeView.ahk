@@ -280,11 +280,18 @@ class RemoteTreeView
     ;         defaultAction     - Determines of the default action is activated
     ;                         true : Send an Enter (default)
     ;                         false : do noting
+    ;         setFocus          - If true, focuses the TreeView before selecting the item.
+    ;                             Note: When the TreeView is not focused, the item will be selected 
+    ;                             but may not be highlighted.
     ;
     ; Returns:
     ;         TRUE if successful, or FALSE otherwise
     ;
-    SetSelection(pItem, defaultAction := true) {
+    SetSelection(pItem, defaultAction := true, setFocus := false) {
+        if (setFocus) {
+            ControlFocus(this.TVHwnd)
+        }
+        
         ; ORI SendMessage TVM_SELECTITEM, TVGN_CARET|TVSI_NOSINGLEEXPAND, pItem, , % "ahk_id " this.TVHwnd
         result := SendMessage(this.TVM_SELECTITEM, this.TVGN_CARET, pItem, , "ahk_id " this.TVHwnd)
         if (defaultAction) {

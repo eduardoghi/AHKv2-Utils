@@ -330,6 +330,16 @@ class RemoteTreeView
         return SendMessage(this.TVM_GETNEXTITEM, this.TVGN_CHILD, pItem, , "ahk_id " this.TVHwnd)
     }
 
+    GetAllChildren(pItem) {
+        children := []
+        child := this.GetChild(pItem)
+        while (child) {
+            children.Push(child)
+            child := this.GetNext(child)
+        }
+        return children
+    }
+
     ;----------------------------------------------------------------------------------------------
     ; Method: GetNext
     ;         Returns the handle of the sibling below the specified item (or 0 if none).

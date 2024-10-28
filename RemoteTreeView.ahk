@@ -340,6 +340,14 @@ class RemoteTreeView
         return children
     }
 
+    GetNodeLevel(pItem) {
+        level := 0
+        while (pItem := this.GetParent(pItem)) {
+            level++
+        }
+        return level
+    }
+
     ;----------------------------------------------------------------------------------------------
     ; Method: GetNext
     ;         Returns the handle of the sibling below the specified item (or 0 if none).
